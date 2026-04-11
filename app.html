@@ -471,7 +471,9 @@ async function doAudit() {
   try {
     const contract = new ethers.Contract(CONTRACT, ABI, provider_read);
     const filter = contract.filters.HashStored(null, wallet);
-    const events = await contract.queryFilter(filter, 0, 'latest');
+    const latestBlock = await provider_read.getBlockNumber();
+    const fromBlock = Math.max(0, latestBlock - 50000);
+    const events = await contract.queryFilter(filter, fromBlock, latestBlock);
 
     if (!events.length) {
       el.innerHTML='<div class="status s-error">No sealed documents found for this wallet.</div>';
