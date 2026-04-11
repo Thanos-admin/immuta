@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Immuta — Seal anything</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0d0d0d;--white:#f0ede4;--off:#e8e3d8;--border:#ddd8cc;--indigo:#4f46e5;--red:#cc2200;--sans:'Syne',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;--serif:'DM Serif Display',Georgia,serif}
+body{font-family:var(--sans);background:var(--white);color:var(--ink)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:var(--ink);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logomark{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center}
+.wordmark{font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.4px}
+.wordmark em{font-style:normal;color:#818cf8}
+.nav-right{display:flex;align-items:center;gap:10px}
+.wallet-btn{background:var(--white);color:var(--ink);border:none;border-radius:7px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.home-link{font-size:13px;color:#888;text-decoration:none}
+.home-link:hover{color:#fff}
+
+.tabs{display:flex;gap:2px;background:var(--off);padding:3px;border-radius:8px;margin-bottom:20px}
+.tab{flex:1;padding:8px;font-size:13px;font-weight:500;color:#666;cursor:pointer;border:none;background:none;border-radius:6px;text-align:center;font-family:var(--sans)}
+.tab.active{background:var(--white);color:var(--ink);border:0.5px solid var(--border)}
+
+.wrap{max-width:580px;margin:36px auto;padding:0 20px}
+.card{background:#fff;border:0.5px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
+.card-title{font-size:17px;font-weight:600;margin-bottom:18px;color:var(--ink)}
+.panel{display:none}.panel.active{display:block}
+
+label{display:block;font-size:11px;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em}
+input[type=file],input[type=text],textarea,select{width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:14px;background:var(--off);color:var(--ink);font-family:var(--sans)}
+textarea{min-height:76px;resize:vertical}
+select{cursor:pointer}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--indigo);background:#fff}
+
+.hash-box{font-family:var(--mono);font-size:11px;background:var(--off);border:0.5px solid var(--border);border-radius:8px;padding:9px 12px;word-break:break-all;margin-bottom:14px;color:#333;line-height:1.5}
+.char-count{font-size:11px;color:#999;text-align:right;margin-top:-10px;margin-bottom:14px}
+
+.token-select{display:flex;gap:6px;margin-bottom:14px}
+.token-opt{flex:1;padding:8px;border:0.5px solid var(--border);border-radius:8px;background:var(--off);cursor:pointer;text-align:center;font-size:13px;font-weight:500;color:#555;font-family:var(--sans)}
+.token-opt.selected{border-color:var(--indigo);background:#eef2ff;color:var(--indigo)}
+
+.fee-row{display:flex;align-items:center;justify-content:space-between;background:var(--off);border-radius:8px;padding:11px 14px;margin-bottom:18px;border:0.5px solid var(--border)}
+.fee-label{font-size:13px;color:#555}
+.fee-amount{font-size:15px;font-weight:700;color:var(--ink)}
+
+.steps-wrap{margin-bottom:16px}
+.step-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.step-row:last-child{border-bottom:none}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--off);color:#555;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:var(--mono)}
+.step-num.active{background:var(--ink);color:#fff}
+.step-num.done{background:#dcfce7;color:#166534}
+.step-title{font-weight:600;color:var(--ink);margin-bottom:2px}
+.step-desc{color:#555;font-size:12px}
+
+.btn{width:100%;padding:13px;background:var(--ink);color:var(--white);border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:#333}
+.btn:disabled{opacity:0.45;cursor:not-allowed}
+.btn-outline{background:var(--white);color:var(--ink);border:0.5px solid var(--border)}
+.btn-outline:hover{background:var(--off)}
+
+.status{margin-top:12px;padding:11px 14px;border-radius:8px;font-size:13px;line-height:1.5}
+.s-info{background:#eef2ff;color:#3730a3}
+.s-success{background:#dcfce7;color:#166534}
+.s-error{background:#fee2e2;color:#991b1b}
+
+.record-card{border:0.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--white)}
+.record-label{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.record-hash{font-family:var(--mono);font-size:10px;color:#777;word-break:break-all;margin-bottom:6px;background:var(--off);padding:6px 8px;border-radius:6px}
+.record-meta{font-size:12px;color:#555}
+.record-note{font-size:13px;color:#333;font-style:italic;margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)}
+.badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-family:var(--mono)}
+
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.metric{background:var(--off);border-radius:8px;padding:12px}
+.metric-val{font-size:18px;font-weight:600;color:var(--ink)}
+.metric-lbl{font-size:10px;color:#777;margin-top:2px;text-transform:uppercase;letter-spacing:0.04em;font-family:var(--mono)}
+
+.loader{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-dark{border-color:var(--border);border-top-color:#555}
+
+/* PDF Certificate */
+.cert-wrap{display:none}
+.cert-wrap.show{display:block}
+.cert{background:#fff;border:0.5px solid var(--border);border-radius:10px;padding:28px;margin-top:14px;font-family:Georgia,serif}
+.cert-header{text-align:center;border-bottom:1px solid var(--ink);padding-bottom:18px;margin-bottom:20px}
+.cert-issuer{font-size:10px;letter-spacing:0.15em;color:#555;text-transform:uppercase;margin-bottom:6px;font-family:var(--mono)}
+.cert-title{font-size:22px;color:var(--ink);margin-bottom:3px}
+.cert-sub{font-size:10px;color:#777;letter-spacing:0.08em;text-transform:uppercase;font-family:var(--mono)}
+.cert-field{display:flex;border-bottom:0.5px solid var(--border);padding:8px 0}
+.cert-field:first-child{border-top:0.5px solid var(--border)}
+.cert-key{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:120px;font-family:var(--mono);padding-top:1px}
+.cert-val{font-size:12px;color:var(--ink);flex:1;word-break:break-all;font-family:var(--mono)}
+.cert-val.serif{font-family:Georgia,serif;font-size:13px}
+.cert-hash{background:var(--off);border-radius:6px;padding:8px 10px;font-family:var(--mono);font-size:10px;color:#333;word-break:break-all;margin:12px 0;line-height:1.5}
+.cert-footer{border-top:1px solid var(--ink);padding-top:16px;margin-top:16px;display:flex;justify-content:space-between;align-items:flex-end}
+.cert-disclaimer{font-size:9px;color:#999;line-height:1.6;max-width:400px;font-family:var(--mono)}
+.cert-verified{font-size:10px;font-weight:600;color:#166534;background:#dcfce7;padding:4px 10px;border-radius:999px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logomark">
+      <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z" stroke="#818cf8" stroke-width="1.2" fill="none"/>
+        <path d="M9 5L12 6.75V10.25L9 12L6 10.25V6.75L9 5Z" fill="#4f46e5"/>
+      </svg>
+    </div>
+    <span class="wordmark">immu<em>ta</em></span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="home-link">← Home</a>
+    <button class="wallet-btn" id="wallet-btn" onclick="connectWallet()">Connect wallet</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('seal',this)">Seal</button>
+    <button class="tab" onclick="switchTab('verify',this)">Verify</button>
+    <button class="tab" onclick="switchTab('audit',this)">Audit log</button>
+  </div>
+
+  <!-- SEAL -->
+  <div id="seal" class="panel active">
+    <div class="card">
+      <div class="card-title">Seal anything</div>
+
+      <label>File</label>
+      <input type="file" id="s-file" onchange="onSFile(this)">
+      <label>Or paste text</label>
+      <textarea id="s-text" placeholder="Any text, data, or content to seal..." oninput="onSText(this)"></textarea>
+
+      <div id="s-hash-wrap" style="display:none">
+        <label>SHA-256 fingerprint</label>
+        <div class="hash-box" id="s-hash"></div>
+      </div>
+
+      <label>Label</label>
+      <input type="text" id="s-label" maxlength="100" placeholder="e.g. Contract v2, Photo evidence, Q3 report" oninput="updateCount('s-label','s-lc',100)">
+      <div class="char-count" id="s-lc">0 / 100</div>
+
+      <label>Note</label>
+      <textarea id="s-note" maxlength="500" placeholder="Context, parties involved, what this proves..." oninput="updateCount('s-note','s-nc',500)"></textarea>
+      <div class="char-count" id="s-nc">0 / 500</div>
+
+      <label>Pay with</label>
+      <div class="token-select">
+        <button class="token-opt selected" onclick="selectToken(this,'tDAI')">tDAI</button>
+        <button class="token-opt" onclick="selectToken(this,'tUSDC')" disabled style="opacity:0.4;cursor:not-allowed">USDC</button>
+        <button class="token-opt" onclick="selectToken(this,'tUSDT')" disabled style="opacity:0.4;cursor:not-allowed">USDT</button>
+      </div>
+      <div style="font-size:11px;color:#999;font-family:var(--mono);margin-bottom:14px">USDC and USDT coming on mainnet</div>
+
+      <div class="fee-row">
+        <span class="fee-label">Sealing fee</span>
+        <span class="fee-amount">$1.00 tDAI</span>
+      </div>
+
+      <div id="s-steps" style="display:none" class="steps-wrap">
+        <div class="step-row">
+          <div class="step-num" id="sn1">1</div>
+          <div><div class="step-title">Approve tDAI</div><div class="step-desc">Allow Immuta to collect the $1 fee. Required once.</div></div>
+        </div>
+        <div class="step-row">
+          <div class="step-num" id="sn2">2</div>
+          <div><div class="step-title">Seal on PulseChain</div><div class="step-desc">Permanently records your fingerprint on-chain.</div></div>
+        </div>
+      </div>
+
+      <button class="btn" id="seal-btn" onclick="doSeal()">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1.5L12 4V8C12 11 7 13 7 13C7 13 2 11 2 8V4L7 1.5Z" stroke="rgba(255,255,255,0.5)" stroke-width="1.1" fill="none"/><path d="M4.5 7L6 8.5L9.5 5.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Seal for $1 tDAI
+      </button>
+      <div id="s-status"></div>
+
+      <!-- PDF CERTIFICATE -->
+      <div class="cert-wrap" id="cert-wrap">
+        <button class="btn btn-outline" style="margin-top:12px" onclick="downloadCert()">Download PDF certificate</button>
+        <div class="cert" id="certificate" style="display:none">
+          <div class="cert-header">
+            <div class="cert-issuer">Immuta Protocol · PulseChain Network</div>
+            <div class="cert-title">Certificate of Document Seal</div>
+            <div class="cert-sub">Blockchain Attestation Record</div>
+          </div>
+          <div id="cert-fields"></div>
+          <div class="cert-hash-label" style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;margin-top:12px;font-family:var(--mono)">SHA-256 fingerprint</div>
+          <div class="cert-hash" id="cert-hash"></div>
+          <div class="cert-footer">
+            <div class="cert-disclaimer">
+              This certificate was issued by Immuta Protocol and is anchored to the PulseChain blockchain.
+              The document fingerprint was computed client-side — the original file was never transmitted or stored.
+              Independently verifiable at scan.pulsechain.com · immuta.app
+            </div>
+            <div class="cert-verified">✓ Verified on-chain</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERIFY -->
+  <div id="verify" class="panel">
+    <div class="card">
+      <div class="card-title">Verify a seal</div>
+      <label>File to verify</label>
+      <input type="file" id="v-file" onchange="onVFile(this)">
+      <label>Or paste text</label>
+      <textarea id="v-text" placeholder="Paste original content..." oninput="onVText(this)"></textarea>
+      <div id="v-hash-wrap" style="display:none">
+        <label>Hash</label>
+        <div class="hash-box" id="v-hash"></div>
+      </div>
+      <button class="btn" onclick="doVerify()">Check registry</button>
+      <div id="v-status"></div>
+      <div id="v-result"></div>
+    </div>
+  </div>
+
+  <!-- AUDIT LOG -->
+  <div id="audit" class="panel">
+    <div class="card">
+      <div class="card-title">Wallet audit log</div>
+      <label>Wallet address</label>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <input type="text" id="a-wallet" placeholder="0x..." style="margin:0;font-family:var(--mono);font-size:13px">
+        <button class="btn" style="width:auto;padding:9px 18px;white-space:nowrap" onclick="doAudit()">Load</button>
+      </div>
+      <button class="btn btn-outline" style="margin-bottom:14px" onclick="loadMyWallet()">Use my wallet</button>
+      <div id="a-result"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONTRACT = "0x0C2a0F6289D1Af62fc2C90301f8a0CadcD017e5c";
+const TDAI = "0x826e4e896CC2f5B371Cd7Bb0bd929DB3e3DB67c0";
+const CHAIN_ID = 943;
+const ABI = [
+  "function storeHash(bytes32,string,string) external",
+  "function getRecord(bytes32) external view returns (tuple(bytes32 hash,address submitter,uint256 timestamp,string label,string note))",
+  "function fee() external view returns (uint256)"
+];
+const ERC20 = [
+  "function approve(address,uint256) external returns (bool)",
+  "function allowance(address,address) external view returns (uint256)"
+];
+const provider_read = new ethers.JsonRpcProvider("https://pulsechain-testnet-rpc.publicnode.com");
+
+let provider, signer, currentHash, verifyHash, selectedToken = 'tDAI';
+let lastSeal = {};
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function selectToken(btn, token) {
+  document.querySelectorAll('.token-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedToken = token;
+}
+
+async function connectWallet() {
+  if (!window.ethereum) { alert("Please install MetaMask or Internet Money wallet."); return; }
+  try {
+    provider = new ethers.BrowserProvider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    try {
+      await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:"0x"+CHAIN_ID.toString(16)}]});
+    } catch(e) {
+      if (e.code===4902) await window.ethereum.request({method:"wallet_addEthereumChain",params:[{
+        chainId:"0x"+CHAIN_ID.toString(16),
+        chainName:"PulseChain Testnet V4",
+        nativeCurrency:{name:"tPLS",symbol:"tPLS",decimals:18},
+        rpcUrls:["https://pulsechain-testnet-rpc.publicnode.com"],
+        blockExplorerUrls:["https://scan.v4.testnet.pulsechain.com"]
+      }]});
+    }
+    signer = await provider.getSigner();
+    const addr = await signer.getAddress();
+    document.getElementById('wallet-btn').textContent = addr.slice(0,6)+"..."+addr.slice(-4);
+  } catch(e) { alert("Connection failed: "+e.message); }
+}
+
+async function sha256(data) {
+  const buf = typeof data==='string' ? new TextEncoder().encode(data) : data;
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return '0x'+Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function onSFile(inp) {
+  if (!inp.files[0]) return;
+  document.getElementById('s-text').value='';
+  currentHash = await sha256(await inp.files[0].arrayBuffer());
+  document.getElementById('s-hash').textContent = currentHash;
+  document.getElementById('s-hash-wrap').style.display='block';
+}
+async function onSText(inp) {
+  if (!inp.value.trim()) { document.getElementById('s-hash-wrap').style.display='none'; return; }
+  document.getElementById('s-file').value='';
+  currentHash = await sha256(inp.value);
+  document.getElementById('s-hash').textContent = currentHash;
+  document.getElementById('s-hash-wrap').style.display='block';
+}
+async function onVFile(inp) {
+  if (!inp.files[0]) return;
+  document.getElementById('v-text').value='';
+  verifyHash = await sha256(await inp.files[0].arrayBuffer());
+  document.getElementById('v-hash').textContent = verifyHash;
+  document.getElementById('v-hash-wrap').style.display='block';
+}
+async function onVText(inp) {
+  if (!inp.value.trim()) { document.getElementById('v-hash-wrap').style.display='none'; return; }
+  document.getElementById('v-file').value='';
+  verifyHash = await sha256(inp.value);
+  document.getElementById('v-hash').textContent = verifyHash;
+  document.getElementById('v-hash-wrap').style.display='block';
+}
+
+function updateCount(a,b,max) {
+  document.getElementById(b).textContent = document.getElementById(a).value.length+' / '+max;
+}
+
+function setStep(n, state) {
+  const el = document.getElementById('sn'+n);
+  el.className = 'step-num '+(state==='active'?'active':state==='done'?'done':'');
+  el.textContent = state==='done' ? '✓' : n;
+}
+
+async function doSeal() {
+  const el = document.getElementById('s-status');
+  const btn = document.getElementById('seal-btn');
+  const label = document.getElementById('s-label').value.trim();
+  const note = document.getElementById('s-note').value.trim();
+  if (!currentHash) { el.className='status s-error'; el.textContent='Select a file or enter text first.'; return; }
+  if (!label) { el.className='status s-error'; el.textContent='Add a label before sealing.'; return; }
+  if (!signer) { el.className='status s-error'; el.textContent='Connect your wallet first.'; return; }
+
+  document.getElementById('s-steps').style.display='block';
+  btn.disabled = true;
+
+  try {
+    const contract = new ethers.Contract(CONTRACT, ABI, signer);
+    const tdai = new ethers.Contract(TDAI, ERC20, signer);
+    const userAddr = await signer.getAddress();
+    const fee = await contract.fee();
+
+    setStep(1,'active');
+    el.className='status s-info'; el.innerHTML='<span class="loader"></span> Checking allowance...';
+    const allowance = await tdai.allowance(userAddr, CONTRACT);
+    if (allowance < fee) {
+      el.innerHTML='<span class="loader"></span> Approve tDAI in MetaMask...';
+      const tx = await tdai.approve(CONTRACT, fee);
+      await tx.wait();
+    }
+    setStep(1,'done');
+
+    setStep(2,'active');
+    el.innerHTML='<span class="loader"></span> Confirm seal in MetaMask...';
+    const hashBytes = ethers.getBytes(currentHash);
+    const tx = await contract.storeHash(hashBytes, label, note);
+    el.innerHTML='<span class="loader"></span> Broadcasting...';
+    const receipt = await tx.wait();
+    setStep(2,'done');
+
+    const ts = new Date().toLocaleString();
+    lastSeal = { hash: currentHash, label, note, timestamp: ts, tx: receipt.hash, submitter: userAddr };
+
+    el.className='status s-success';
+    el.innerHTML=`Sealed successfully.<br><span style="font-family:var(--mono);font-size:11px">TX: ${receipt.hash.slice(0,22)}...</span><br><a href="https://scan.v4.testnet.pulsechain.com/tx/${receipt.hash}" target="_blank" style="font-size:12px;color:#166534">View on PulseScan →</a>`;
+
+    // Show certificate download
+    document.getElementById('cert-wrap').classList.add('show');
+    buildCert(lastSeal);
+
+  } catch(e) {
+    el.className='status s-error';
+    el.textContent='Error: '+(e.reason||e.message);
+  }
+  btn.disabled=false;
+}
+
+function buildCert(data) {
+  document.getElementById('cert-hash').textContent = data.hash;
+  document.getElementById('cert-fields').innerHTML = `
+    <div class="cert-field"><div class="cert-key">Label</div><div class="cert-val serif">${data.label}</div></div>
+    <div class="cert-field"><div class="cert-key">Sealed</div><div class="cert-val">${data.timestamp}</div></div>
+    <div class="cert-field"><div class="cert-key">Network</div><div class="cert-val">PulseChain Testnet · Chain ID 943</div></div>
+    <div class="cert-field"><div class="cert-key">Transaction</div><div class="cert-val">${data.tx}</div></div>
+    <div class="cert-field"><div class="cert-key">Sealed by</div><div class="cert-val">${data.submitter}</div></div>
+    ${data.note ? `<div class="cert-field"><div class="cert-key">Note</div><div class="cert-val serif">${data.note}</div></div>` : ''}
+  `;
+}
+
+function downloadCert() {
+  const cert = document.getElementById('certificate');
+  cert.style.display='block';
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Immuta Certificate</title>
+  <style>body{font-family:Georgia,serif;background:#f0ede4;padding:40px}
+  .cert{background:#fff;border:0.5px solid #ddd8cc;max-width:700px;margin:0 auto;padding:40px}
+  .cert-header{text-align:center;border-bottom:1px solid #0d0d0d;padding-bottom:16px;margin-bottom:18px}
+  .cert-issuer{font-size:10px;letter-spacing:0.15em;color:#555;text-transform:uppercase;margin-bottom:5px;font-family:monospace}
+  .cert-title{font-size:22px;color:#0d0d0d;margin-bottom:3px}
+  .cert-sub{font-size:10px;color:#777;letter-spacing:0.08em;text-transform:uppercase;font-family:monospace}
+  .cert-field{display:flex;border-bottom:0.5px solid #ddd8cc;padding:7px 0}
+  .cert-field:first-child{border-top:0.5px solid #ddd8cc}
+  .cert-key{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:120px;font-family:monospace;padding-top:1px}
+  .cert-val{font-size:12px;color:#0d0d0d;flex:1;word-break:break-all;font-family:monospace}
+  .cert-val.serif{font-family:Georgia,serif;font-size:13px}
+  .cert-hash{background:#f0ede4;border-radius:4px;padding:8px 10px;font-family:monospace;font-size:10px;color:#333;word-break:break-all;margin:10px 0;line-height:1.5}
+  .cert-footer{border-top:1px solid #0d0d0d;padding-top:14px;margin-top:14px;display:flex;justify-content:space-between;align-items:flex-end}
+  .cert-disclaimer{font-size:9px;color:#999;line-height:1.6;max-width:400px;font-family:monospace}
+  .cert-verified{font-size:10px;font-weight:600;color:#166534;background:#dcfce7;padding:4px 10px;border-radius:999px;font-family:monospace}
+  @media print{body{padding:0}@page{margin:20mm}}</style>
+  </head><body>${cert.outerHTML}</body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(), 400);
+  cert.style.display='none';
+}
+
+async function doVerify() {
+  const el = document.getElementById('v-status');
+  const res = document.getElementById('v-result');
+  if (!verifyHash) { el.className='status s-error'; el.textContent='Select a file or enter text first.'; return; }
+  el.className='status s-info'; el.innerHTML='<span class="loader loader-dark"></span> Querying contract...';
+  res.innerHTML='';
+  try {
+    const contract = new ethers.Contract(CONTRACT, ABI, provider_read);
+    const record = await contract.getRecord(ethers.getBytes(verifyHash));
+    if (record.timestamp > 0n) {
+      const d = new Date(Number(record.timestamp)*1000).toLocaleString();
+      el.className='status s-success'; el.textContent='Verified on PulseChain';
+      res.innerHTML=`<div class="record-card" style="margin-top:10px">
+        <div class="record-label">${record.label}</div>
+        <div class="record-hash">${verifyHash}</div>
+        <div class="record-meta">Sealed ${d} · <span style="font-family:var(--mono)">${record.submitter.slice(0,10)}...</span></div>
+        ${record.note ? `<div class="record-note">${record.note}</div>` : ''}
+      </div>`;
+    } else {
+      el.className='status s-error';
+      el.textContent='Not found. This content has not been sealed on Immuta, or has been altered since sealing.';
+    }
+  } catch(e) { el.className='status s-error'; el.textContent='Error: '+e.message; }
+}
+
+async function loadMyWallet() {
+  if (!signer) { alert("Connect your wallet first."); return; }
+  const addr = await signer.getAddress();
+  document.getElementById('a-wallet').value = addr;
+  doAudit();
+}
+
+async function doAudit() {
+  const wallet = document.getElementById('a-wallet').value.trim();
+  const el = document.getElementById('a-result');
+  if (!wallet) { el.innerHTML='<div class="status s-error">Enter a wallet address.</div>'; return; }
+  el.innerHTML='<div class="status s-info"><span class="loader loader-dark"></span> Fetching records from PulseChain...</div>';
+
+  try {
+    const contract = new ethers.Contract(CONTRACT, ABI, provider_read);
+    const filter = contract.filters.HashStored(null, wallet);
+    const events = await contract.queryFilter(filter, 0, 'latest');
+
+    if (!events.length) {
+      el.innerHTML='<div class="status s-error">No sealed documents found for this wallet.</div>';
+      return;
+    }
+
+    const records = await Promise.all(events.map(async e => {
+      const block = await provider_read.getBlock(e.blockNumber);
+      return {
+        hash: e.args.hash,
+        label: e.args.label,
+        note: e.args.note,
+        timestamp: new Date(Number(block.timestamp)*1000).toLocaleString(),
+        tx: e.transactionHash
+      };
+    }));
+
+    const latest = records[records.length-1].timestamp;
+    el.innerHTML=`
+      <div class="metrics">
+        <div class="metric"><div class="metric-val">${records.length}</div><div class="metric-lbl">Sealed docs</div></div>
+        <div class="metric"><div class="metric-val">$${records.length}.00</div><div class="metric-lbl">Total paid</div></div>
+        <div class="metric"><div class="metric-val">${latest.split(',')[0]}</div><div class="metric-lbl">Most recent</div></div>
+      </div>
+      ${records.reverse().map(r=>`
+        <div class="record-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div class="record-label">${r.label}</div>
+            <span class="badge">Sealed</span>
+          </div>
+          <div class="record-hash">${r.hash}</div>
+          <div class="record-meta">${r.timestamp} · <a href="https://scan.v4.testnet.pulsechain.com/tx/${r.tx}" target="_blank" style="color:var(--indigo);font-size:11px">View TX →</a></div>
+          ${r.note ? `<div class="record-note">${r.note}</div>` : ''}
+        </div>
+      `).join('')}
+    `;
+  } catch(e) { el.innerHTML='<div class="status s-error">Error: '+e.message+'</div>'; }
+}
+</script>
+</body>
+</html>
