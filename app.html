@@ -243,9 +243,7 @@ const CHAIN_ID = 943;
 const ABI = [
   "function storeHash(bytes32,string,string) external",
   "function getRecord(bytes32) external view returns (tuple(bytes32 hash,address submitter,uint256 timestamp,string label,string note))",
-  "function fee() external view returns (uint256)",
-  "event HashStored(bytes32 indexed hash, address indexed submitter, uint256 timestamp, string label, string note)",
-  "event HashStored(bytes32 indexed hash, address indexed submitter, uint256 timestamp, string label, string note)"
+  "function fee() external view returns (uint256)"
 ];
 const ERC20 = [
   "function approve(address,uint256) external returns (bool)",
@@ -440,11 +438,14 @@ async function doVerify() {
     if (record.timestamp > 0n) {
       const d = new Date(Number(record.timestamp)*1000).toLocaleString();
       el.className='status s-success'; el.textContent='Verified on PulseChain';
+      // Store for certificate generation
+      lastSeal = { hash: verifyHash, label: record.label, note: record.note, timestamp: d, tx: '', submitter: record.submitter };
       res.innerHTML=`<div class="record-card" style="margin-top:10px">
         <div class="record-label">${record.label}</div>
         <div class="record-hash">${verifyHash}</div>
         <div class="record-meta">Sealed ${d} · <span style="font-family:var(--mono)">${record.submitter.slice(0,10)}...</span></div>
         ${record.note ? `<div class="record-note">${record.note}</div>` : ''}
+        <button class="btn btn-outline" style="margin-top:12px;padding:9px" onclick="buildCert(lastSeal);downloadCert()">Download PDF certificate</button>
       </div>`;
     } else {
       el.className='status s-error';
@@ -469,9 +470,7 @@ async function doAudit() {
   try {
     const contract = new ethers.Contract(CONTRACT, ABI, provider_read);
     const filter = contract.filters.HashStored(null, wallet);
-    const latestBlock = await provider_read.getBlockNumber();
-    const fromBlock = Math.max(0, latestBlock - 50000);
-    const events = await contract.queryFilter(filter, fromBlock, latestBlock);
+    const events = await contract.queryFilter(filter, 0, 'latest');
 
     if (!events.length) {
       el.innerHTML='<div class="status s-error">No sealed documents found for this wallet.</div>';
