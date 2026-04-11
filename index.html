@@ -3,303 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Immuta — Seal anything</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+<title>Immuta — Don't trust us. Trust the code.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, sans-serif; background: #f0ede4; color: #0d0d0d; }
-.nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: #0d0d0d; }
-.logo { font-size: 18px; font-weight: 700; color: #f0ede4; letter-spacing: -0.5px; }
-.logo em { font-style: normal; color: #818cf8; }
-.wallet-btn { background: #f0ede4; color: #0d0d0d; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
-.wrap { max-width: 600px; margin: 48px auto; padding: 0 24px; }
-.card { background: #fff; border: 0.5px solid #ddd8cc; border-radius: 16px; padding: 28px; margin-bottom: 16px; }
-.card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #0d0d0d; }
-label { display: block; font-size: 12px; font-weight: 600; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-input[type=file], input[type=text], textarea { width: 100%; padding: 10px 12px; border: 0.5px solid #ddd8cc; border-radius: 8px; font-size: 14px; margin-bottom: 16px; background: #fafaf8; color: #0d0d0d; font-family: system-ui, sans-serif; }
-textarea { min-height: 80px; resize: vertical; }
-.hash-display { font-family: monospace; font-size: 11px; background: #f0ede4; border: 0.5px solid #ddd8cc; border-radius: 8px; padding: 10px 12px; word-break: break-all; margin-bottom: 16px; color: #444; line-height: 1.5; }
-.fee-row { display: flex; align-items: center; justify-content: space-between; background: #f0ede4; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; }
-.fee-label { font-size: 13px; color: #666; }
-.fee-amount { font-size: 16px; font-weight: 700; color: #0d0d0d; }
-.btn { width: 100%; padding: 14px; background: #0d0d0d; color: #f0ede4; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
-.btn:hover { background: #333; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.status { margin-top: 14px; padding: 12px 16px; border-radius: 8px; font-size: 13px; line-height: 1.5; }
-.status.info { background: #e8eaf6; color: #3730a3; }
-.status.success { background: #dcfce7; color: #166534; }
-.status.error { background: #fee2e2; color: #991b1b; }
-.step-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid #f0ede4; font-size: 13px; color: #666; }
-.step-row:last-child { border-bottom: none; }
-.step-num { width: 24px; height: 24px; border-radius: 50%; background: #e8eaf6; color: #3730a3; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.step-num.done { background: #dcfce7; color: #166534; }
-.step-num.active { background: #0d0d0d; color: #fff; }
-.loader { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.char-count { font-size: 11px; color: #999; text-align: right; margin-top: -12px; margin-bottom: 16px; }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0d0d;
+  --white:#f0ede4;
+  --off:#e8e3d8;
+  --red:#cc2200;
+  --indigo:#4f46e5;
+  --indigo-l:#818cf8;
+  --border:#ddd8cc;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'Syne',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--ink);overflow-x:hidden}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:var(--white);border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logomark{width:30px;height:30px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.wordmark{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.4px}
+.wordmark em{font-style:normal;color:var(--indigo)}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-size:14px;color:#555;background:none;border:none;cursor:pointer;font-family:var(--sans);font-weight:500}
+.nav-link:hover{color:var(--ink)}
+.nav-cta{background:var(--ink);color:var(--white);border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);text-decoration:none;display:inline-block}
+.nav-cta:hover{background:#333}
+
+.hero{padding:80px 48px 72px;max-width:860px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--off);border:0.5px solid var(--border);border-radius:999px;padding:5px 16px;font-size:12px;font-weight:500;color:#444;margin-bottom:24px;font-family:var(--mono)}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
+.hero-title{font-family:var(--serif);font-size:clamp(38px,5.5vw,60px);line-height:1.1;letter-spacing:-0.5px;color:var(--ink);margin-bottom:18px}
+.hero-title em{font-style:italic;color:var(--indigo)}
+.hero-sub{font-size:17px;color:#333;line-height:1.65;max-width:500px;margin:0 auto 32px}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:40px}
+.btn-primary{background:var(--ink);color:var(--white);border:none;border-radius:10px;padding:13px 26px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn-primary:hover{background:#333}
+.btn-secondary{background:var(--white);color:var(--ink);border:0.5px solid var(--border);border-radius:10px;padding:13px 26px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--sans)}
+.btn-secondary:hover{background:var(--off)}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.proof-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;font-family:var(--mono)}
+.proof-dot{width:5px;height:5px;border-radius:50%;background:var(--red)}
+
+.section{padding:72px 48px;border-top:0.5px solid var(--border)}
+.section-inner{max-width:860px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:8px}
+.section-title{font-family:var(--serif);font-size:34px;color:var(--ink);letter-spacing:-0.3px;margin-bottom:10px}
+.section-sub{font-size:16px;color:#333;line-height:1.65;max-width:480px;margin-bottom:40px}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border-radius:12px;overflow:hidden}
+.step{background:var(--white);padding:26px 22px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--off);color:var(--ink);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-family:var(--mono)}
+.step-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.step-desc{font-size:13px;color:#333;line-height:1.6}
+
+.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.case{border:0.5px solid var(--border);border-radius:12px;padding:22px;background:var(--white)}
+.case-who{font-size:11px;font-weight:600;color:var(--indigo);margin-bottom:7px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase}
+.case-story{font-family:var(--serif);font-size:15px;color:var(--ink);line-height:1.6;font-style:italic}
+
+.pricing-card{max-width:420px;margin:0 auto;border:0.5px solid var(--border);border-radius:18px;overflow:hidden;background:var(--white)}
+.pricing-top{background:var(--ink);padding:32px;text-align:center}
+.price-label{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:10px}
+.price-amount{font-family:var(--serif);font-size:68px;color:var(--white);line-height:1;letter-spacing:-2px}
+.price-currency{font-size:22px;color:#888;vertical-align:super}
+.price-token{font-family:var(--mono);font-size:13px;color:#888;margin-top:6px}
+.price-tagline{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--indigo-l);margin-top:10px}
+.pricing-body{padding:24px 28px}
+.price-feat{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:14px;color:#222}
+.price-feat:last-child{border-bottom:none}
+.feat-check{width:16px;height:16px;border-radius:50%;background:var(--off);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.price-btn{width:100%;background:var(--ink);color:var(--white);border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);margin-top:18px;display:block;text-align:center;text-decoration:none}
+.price-btn:hover{background:#333}
+.price-cap{text-align:center;font-size:11px;color:#777;margin-top:8px;font-family:var(--mono)}
+
+.manifesto-section{background:var(--ink);padding:80px 48px;border-top:0.5px solid #1a1a1a}
+.manifesto-inner{max-width:680px;margin:0 auto}
+.manifesto-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#888;margin-bottom:28px}
+.manifesto-opener{font-family:var(--serif);font-size:17px;color:#aaa;line-height:1.8;font-style:italic;margin-bottom:32px}
+.manifesto-opener strong{font-style:normal;color:#ccc;font-weight:400}
+.glasses-pivot{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--white);border-left:3px solid var(--indigo);padding:14px 20px;background:rgba(79,70,229,0.07);border-radius:0 8px 8px 0;margin:32px 0;letter-spacing:-0.3px}
+.manifesto-body{font-family:var(--serif);font-size:17px;color:#ddd;line-height:1.85}
+.manifesto-body p{margin-bottom:1.4em}
+.manifesto-close{margin-top:44px;padding-top:36px;border-top:1px solid #222}
+.trilogy{display:inline-flex;gap:0;margin-bottom:28px}
+.tword{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:9px 16px;border:0.5px solid #555;color:#bbb}
+.tword:first-child{border-radius:6px 0 0 6px}
+.tword:last-child{border-radius:0 6px 6px 0}
+.obey-big{font-family:var(--sans);font-size:clamp(36px,5.5vw,58px);font-weight:700;color:var(--white);letter-spacing:-2px;line-height:1;margin-bottom:24px}
+.obey-big em{font-style:normal;color:var(--indigo-l)}
+.sig-row{display:flex;align-items:center;gap:14px}
+.sig-mark{width:40px;height:40px;border-radius:50%;background:#111;border:0.5px solid #333;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sig-label{font-family:var(--serif);font-size:13px;color:#888;font-style:italic}
+.sig-name{font-family:var(--serif);font-size:19px;color:#eee;font-style:italic;margin-top:1px;cursor:pointer}
+.sig-name:hover{color:var(--indigo-l)}
+
+.ghost-section{background:#080808;padding:48px;border-top:0.5px solid #111;text-align:center}
+.ghost-line{font-family:var(--serif);font-size:20px;font-style:italic;color:#aaa}
+.ghost-line em{font-style:normal;color:#eee}
+
+.nodata{background:var(--ink);padding:64px 48px;text-align:center;border-top:0.5px solid #1a1a1a}
+.nodata-inner{max-width:600px;margin:0 auto}
+.nodata-title{font-family:var(--serif);font-size:36px;color:var(--white);margin-bottom:10px;letter-spacing:-0.4px}
+.nodata-sub{font-size:15px;color:#aaa;line-height:1.7;margin-bottom:32px}
+.nodata-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:#1a1a1a;border-radius:10px;overflow:hidden;margin-bottom:32px}
+.nodata-cell{background:#0d0d0d;padding:18px 22px}
+.nodata-zero{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--indigo-l);margin-bottom:3px}
+.nodata-label{font-size:11px;color:#888;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.06em}
+.nodata-stmt{font-family:var(--serif);font-size:17px;color:#aaa;font-style:italic;line-height:1.7}
+.nodata-stmt em{font-style:normal;color:#fff}
+
+.ecosystem{padding:72px 48px;background:var(--off);border-top:0.5px solid var(--border)}
+.eco-inner{max-width:860px;margin:0 auto}
+.pulse-card{border:0.5px solid var(--border);border-radius:14px;padding:24px 28px;background:var(--white);display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:14px;text-decoration:none}
+.pulse-card:hover{border-color:#c7d2fe}
+.pulse-left{display:flex;align-items:center;gap:16px}
+.pulse-logo{width:48px;height:48px;border-radius:12px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.pulse-name{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.pulse-desc{font-size:13px;color:#333;line-height:1.5;max-width:380px}
+.eco-link{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--indigo);background:#eef2ff;border:0.5px solid #c7d2fe;border-radius:7px;padding:7px 14px;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.tokens-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.token-card{border:0.5px solid var(--border);border-radius:12px;padding:18px;background:var(--white);text-decoration:none}
+.token-card:hover{border-color:#c7d2fe}
+.token-logo{width:44px;height:44px;border-radius:10px;overflow:hidden;margin-bottom:12px}
+.token-logo img{width:44px;height:44px;display:block}
+.token-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.token-ticker{font-family:var(--mono);font-size:10px;color:#777;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+.token-desc{font-size:12px;color:#333;line-height:1.6}
+.token-link{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:500;color:var(--indigo);margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border)}
+.tools-label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#777;margin-bottom:10px}
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tool-card{border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--white);display:flex;align-items:center;gap:12px;text-decoration:none}
+.tool-card:hover{border-color:#c7d2fe}
+.tool-logo{width:34px;height:34px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tool-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.tool-desc{font-size:11px;color:#555}
+.align-box{border:0.5px solid #c7d2fe;border-radius:10px;padding:16px 20px;background:#f5f3ff;display:flex;align-items:flex-start;gap:12px;margin-top:14px}
+.align-text{font-size:13px;color:#3730a3;line-height:1.65}
+
+.cta-section{padding:80px 48px;text-align:center;border-top:0.5px solid var(--border)}
+.cta-inner{max-width:540px;margin:0 auto}
+.cta-pre{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--indigo);margin-bottom:14px}
+.cta-title{font-family:var(--serif);font-size:40px;color:var(--ink);line-height:1.15;margin-bottom:12px;letter-spacing:-0.4px}
+.cta-sub{font-size:15px;color:#333;margin-bottom:28px;line-height:1.6}
+.cta-note{font-family:var(--mono);font-size:11px;color:#777;margin-top:12px}
+
+footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--white)}
+.footer-left{font-size:12px;color:#777;font-family:var(--mono)}
+.footer-obey{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--indigo);letter-spacing:0.05em}
+.footer-links{display:flex;gap:16px}
+.footer-link{font-size:12px;color:#777;background:none;border:none;cursor:pointer;font-family:var(--mono);text-decoration:none}
+.footer-link:hover{color:var(--ink)}
+
+.easter{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:1000;align-items:center;justify-content:center;padding:40px}
+.easter.on{display:flex}
+.easter-content{max-width:600px;text-align:center}
+.easter-glasses{margin-bottom:28px;opacity:0.7}
+.easter-reveal{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#555;margin-bottom:14px}
+.easter-title{font-family:var(--sans);font-size:28px;font-weight:700;color:var(--white);letter-spacing:-0.4px;margin-bottom:20px}
+.easter-body{font-family:var(--serif);font-size:16px;color:#888;line-height:1.8;margin-bottom:28px;font-style:italic}
+.easter-body em{font-style:normal;color:#ccc}
+.easter-fix{font-family:var(--sans);font-size:20px;font-weight:700;color:var(--indigo-l);letter-spacing:-0.3px;margin-bottom:8px}
+.easter-sub{font-family:var(--mono);font-size:11px;color:#444;margin-bottom:28px}
+.video-ph{width:100%;max-width:500px;aspect-ratio:16/9;background:#0d0d0d;border:0.5px solid #1a1a1a;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;color:#333;font-family:var(--mono);font-size:12px}
+.easter-btns{display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-sleep{background:none;color:#555;border:0.5px solid #333;border-radius:7px;padding:9px 18px;font-size:13px;cursor:pointer;font-family:var(--mono)}
+.btn-awake{background:var(--indigo);color:#fff;border:none;border-radius:7px;padding:9px 18px;font-size:13px;cursor:pointer;font-family:var(--mono);text-decoration:none;display:inline-block}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="logo">immu<em>ta</em></div>
-  <button class="wallet-btn" id="wallet-btn" onclick="connectWallet()">Connect wallet</button>
+  <a href="#" class="logo">
+    <div class="logomark">
+      <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z" stroke="#818cf8" stroke-width="1.2" fill="none"/>
+        <path d="M9 5L12 6.75V10.25L9 12L6 10.25V6.75L9 5Z" fill="#4f46e5"/>
+      </svg>
+    </div>
+    <span class="wordmark">immu<em>ta</em></span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
+    <button class="nav-link" onclick="document.getElementById('cases').scrollIntoView({behavior:'smooth'})">Use cases</button>
+    <button class="nav-link" onclick="document.getElementById('setup').scrollIntoView({behavior:'smooth'})">Get started</button><button class="nav-link" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About</button>
+    <button class="nav-link" onclick="document.getElementById('ecosystem').scrollIntoView({behavior:'smooth'})">Ecosystem</button>
+    <a href="app.html" class="nav-cta">Launch app</a>
+  </div>
 </nav>
 
-<div class="wrap">
-  <div class="card">
-    <div class="card-title">Seal anything</div>
-
-    <label>File</label>
-    <input type="file" id="file-input" onchange="onFileChange(this)">
-
-    <label>Or paste text</label>
-    <textarea id="text-input" placeholder="Any text, data, or content to seal..." oninput="onTextInput(this)"></textarea>
-
-    <div id="hash-wrap" style="display:none">
-      <label>SHA-256 fingerprint</label>
-      <div class="hash-display" id="hash-display"></div>
-    </div>
-
-    <label>Label</label>
-    <input type="text" id="label-input" maxlength="100" placeholder="e.g. Contract v2, Photo evidence, Q3 report" oninput="updateCount('label-input','label-count',100)">
-    <div class="char-count" id="label-count">0 / 100</div>
-
-    <label>Note</label>
-    <textarea id="note-input" maxlength="500" placeholder="Context, parties involved, what this proves..." oninput="updateCount('note-input','note-count',500)"></textarea>
-    <div class="char-count" id="note-count">0 / 500</div>
-
-    <div class="fee-row">
-      <span class="fee-label">Sealing fee</span>
-      <span class="fee-amount">$1.00 tDAI</span>
-    </div>
-
-    <div id="steps" style="display:none;margin-bottom:20px">
-      <div class="step-row">
-        <div class="step-num" id="step1-num">1</div>
-        <div>
-          <strong>Approve tDAI</strong><br>
-          Allow Immuta to collect the $1 fee. Required once.
-        </div>
-      </div>
-      <div class="step-row">
-        <div class="step-num" id="step2-num">2</div>
-        <div>
-          <strong>Seal on PulseChain</strong><br>
-          Permanently records your fingerprint on-chain.
-        </div>
-      </div>
-    </div>
-
-    <button class="btn" id="seal-btn" onclick="sealDocument()">Seal for $1 tDAI</button>
-    <div id="seal-status"></div>
+<div class="hero">
+  <div class="hero-badge"><span class="badge-dot"></span>Built on PulseChain · Chain ID 369</div>
+  <h1 class="hero-title">Seal anything.<br><em>Permanently.</em> On-chain.</h1>
+  <p class="hero-sub">A document, photo, video, zip file — anything that can be hashed can be sealed. Immuta computes a SHA-256 fingerprint of your file locally in your browser, then registers it permanently on PulseChain.</p>
+  <div class="hero-actions">
+    <a href="app.html" class="btn-primary">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5L12 4V8C12 11 7 13 7 13C7 13 2 11 2 8V4L7 1.5Z" stroke="rgba(255,255,255,0.5)" stroke-width="1.1" fill="none"/><path d="M4.5 7L6 8.5L9.5 5.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Seal something
+    </a>
+    <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
   </div>
+  <div class="hero-proof">
+    <div class="proof-item"><span class="proof-dot"></span>File never leaves your device</div>
+    <div class="proof-item"><span class="proof-dot"></span>SHA-256 hashed client-side</div>
+    <div class="proof-item"><span class="proof-dot"></span>Zero data collected</div>
+    <div class="proof-item"><span class="proof-dot"></span>$1 flat fee</div>
+  </div>
+</div>
 
-  <div class="card">
-    <div class="card-title">Verify</div>
-    <label>File to verify</label>
-    <input type="file" id="verify-file" onchange="onVerifyFile(this)">
-    <label>Or paste text</label>
-    <textarea id="verify-text" placeholder="Paste original content..." oninput="onVerifyText(this)"></textarea>
-    <div id="verify-hash-wrap" style="display:none">
-      <label>Hash</label>
-      <div class="hash-display" id="verify-hash-display"></div>
+<div class="section" id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <div class="section-title">Three steps. Permanent proof.</div>
+    <p class="section-sub">No account required. No server. Your file never leaves your browser.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Drop any file or paste text</div>
+        <div class="step-desc">Immuta computes a SHA-256 fingerprint in your browser. A document, photo, video, zip — anything. The original never leaves your device.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Pay $1 and seal</div>
+        <div class="step-desc">Pay $1 in USDC, DAI, or USDT. Sign with your wallet. Your fingerprint, timestamp, and note are written permanently to PulseChain.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Share your certificate</div>
+        <div class="step-desc">Get a shareable verification URL and downloadable PDF. Anyone can verify your seal on PulseScan independently — no Immuta account needed.</div>
+      </div>
     </div>
-    <button class="btn" onclick="verifyDocument()">Check registry</button>
-    <div id="verify-status"></div>
+  </div>
+</div>
+
+<div class="section" id="cases" style="background:var(--off)">
+  <div class="section-inner">
+    <div class="section-label">Use cases</div>
+    <div class="section-title">If you've ever needed to prove something happened</div>
+    <p class="section-sub">This is for you.</p>
+    <div class="cases">
+      <div class="case">
+        <div class="case-who">The freelancer</div>
+        <div class="case-story">You delivered the work. The client says they never approved it. You sealed the approved version the day they signed off. The argument is over.</div>
+      </div>
+      <div class="case">
+        <div class="case-who">The journalist</div>
+        <div class="case-story">Seal source documents the moment you receive them. Prove they existed before your story broke — before any denial, before any legal challenge.</div>
+      </div>
+      <div class="case">
+        <div class="case-who">The creator</div>
+        <div class="case-story">You wrote it, photographed it, composed it first. Seal your original work before publishing. Prove authorship before anyone else can claim it.</div>
+      </div>
+      <div class="case">
+        <div class="case-who">The tenant</div>
+        <div class="case-story">Move-in day. Photograph every scratch, every mark. Seal the photos. When they try to keep your deposit — you have irrefutable proof of condition.</div>
+      </div>
+      <div class="case">
+        <div class="case-who">The small business</div>
+        <div class="case-story">Seal contracts, invoices, and agreements the moment they're signed. No dispute about what was agreed, or when.</div>
+      </div>
+      <div class="case">
+        <div class="case-who">The developer</div>
+        <div class="case-story">Timestamp code, architecture decisions, and IP disclosures. Prove prior art. Seal your work before anyone can challenge when it existed.</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px">
+      <div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-style:italic;margin-bottom:6px">In the age of AI and disinformation —</div>
+      <div style="font-family:var(--sans);font-size:24px;font-weight:700;color:var(--indigo);letter-spacing:-0.4px">Immuta it. Before they change it.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">One dollar for freedom</div>
+    <p class="section-sub" style="margin:0 auto 36px">No subscriptions. No tiers. No surprises.</p>
+    <div class="pricing-card">
+      <div class="pricing-top">
+        <div class="price-label">Per seal</div>
+        <div class="price-amount"><span class="price-currency">$</span>1</div>
+        <div class="price-token">USDC · DAI · USDT · PulseChain</div>
+        <div class="price-tagline">One dollar for freedom.</div>
+      </div>
+      <div class="pricing-body">
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Permanent on-chain record</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Shareable verification URL</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Downloadable PDF certificate</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Wallet audit log entry</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Zero data collected</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>PulseChain gas included</div>
+        <a href="app.html" class="price-btn">Seal your first document →</a>
+        <div class="price-cap">Fee capped in the smart contract. Can never exceed $10.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section" id="setup">
+  <div class="section-inner">
+    <div class="section-label">Get started</div>
+    <div class="section-title">Add PulseChain to your wallet</div>
+    <p class="section-sub">You need MetaMask and PulseChain configured to use Immuta. Here's how.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Install a wallet</div>
+        <div class="step-desc">PulseChain works with <a href="https://internalmoney.com" target="_blank" style="color:var(--indigo)">Internet Money</a>, <a href="https://metamask.io" target="_blank" style="color:var(--indigo)">MetaMask</a>, and <a href="https://brave.com/wallet" target="_blank" style="color:var(--indigo)">Brave Wallet</a>. Any of these will work with Immuta.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Add PulseChain network</div>
+        <div class="step-desc">Visit <a href="https://pulsechain.com" target="_blank" style="color:var(--indigo)">pulsechain.com</a> and scroll down to find the "Add PulseChain to MetaMask" button. One click adds the network automatically.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Get USDC, DAI, or USDT</div>
+        <div class="step-desc">Bridge stablecoins to PulseChain using <a href="https://bridge.pulsechain.com" target="_blank" style="color:var(--indigo)">bridge.pulsechain.com</a>, or swap on <a href="https://pulsex.com" target="_blank" style="color:var(--indigo)">PulseX</a>. You need $1 to seal a document.</div>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:16px 20px;background:var(--off);border-radius:10px;border:0.5px solid var(--border)">
+      <div style="font-size:13px;color:#333;line-height:1.65">
+        <strong style="font-weight:600">Need help?</strong> Full setup instructions are available at 
+        <a href="https://pulsechain.com" target="_blank" style="color:var(--indigo);font-weight:500">pulsechain.com</a> — scroll down for the network details and step by step guide.
+        <br><br>
+        <span style="font-family:var(--mono);font-size:11px;color:#555">
+          Network name: PulseChain · Chain ID: 369 · RPC: https://rpc.pulsechain.com · Explorer: scan.pulsechain.com
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="manifesto-section" id="about">
+  <div class="manifesto-inner">
+    <div class="manifesto-eyebrow">Manifesto</div>
+    <div class="manifesto-opener">
+      They told you to trust the institution.<br>
+      To trust the notary. The bank. The registry. The middleman.<br>
+      To trust the paper. The stamp. <strong>The signature of someone you've never met.</strong>
+    </div>
+    
+    <div class="manifesto-body">
+      <p>The future doesn't ask for trust. It demands proof.</p>
+      <p>Immuta is built on the belief that truth should be mathematical, permanence should be absolute, and verification should require no authority — only a blockchain. That the integrity of a record should not depend on the integrity of any single institution.</p>
+      <p>We build on PulseChain because decentralized infrastructure should be fast enough, and affordable enough, to be genuinely useful — not a privilege reserved for those who can absorb the cost.</p>
+      <p>We hold no data. We keep no files. We collect no information beyond what the blockchain itself records — your hash, your label, your wallet address. That's it. Nothing else exists.</p>
+    </div>
+    <div class="manifesto-close">
+      <div class="trilogy">
+        <div class="tword">Trustless</div>
+        <div class="tword">Immutable</div>
+        <div class="tword">Permanent</div>
+      </div>
+      <div class="obey-big">Obey the <em>code.</em></div>
+      <div class="sig-row">
+        <div class="sig-mark">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z" stroke="#818cf8" stroke-width="1.2" fill="none"/>
+            <path d="M9 5L12 6.75V10.25L9 12L6 10.25V6.75L9 5Z" fill="#4f46e5" opacity="0.5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="sig-label">Signed on behalf of</div>
+          <div class="sig-name" id="sig">— The Human Race</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ghost-section">
+  <div class="ghost-line"><em>Freedom through math. Immutable through code.</em></div>
+</div>
+
+<div class="nodata">
+  <div class="nodata-inner">
+    <div class="section-label" style="color:#555;margin-bottom:14px">Transparency</div>
+    <div class="nodata-title">We hold nothing.</div>
+    <p class="nodata-sub">No name. No email. No IP address. No analytics. No account. The only information that exists on-chain is what you chose to put there.</p>
+    <div class="nodata-grid">
+      <div class="nodata-cell"><div class="nodata-zero">0 bytes</div><div class="nodata-label">Personal data held</div></div>
+      <div class="nodata-cell"><div class="nodata-zero">0 servers</div><div class="nodata-label">Storing your files</div></div>
+      <div class="nodata-cell"><div class="nodata-zero">0 accounts</div><div class="nodata-label">Required to use</div></div>
+      <div class="nodata-cell"><div class="nodata-zero">100%</div><div class="nodata-label">On-chain verifiable</div></div>
+    </div>
+    <div class="nodata-stmt">We cannot be subpoenaed for your data. We cannot be breached.<br><em>The code holds the record. Not us.</em></div>
+  </div>
+</div>
+
+<div class="ecosystem" id="ecosystem">
+  <div class="eco-inner">
+    <div class="section-label">Built on PulseChain</div>
+    <div class="section-title" style="margin-bottom:8px">Part of a growing ecosystem</div>
+    <p style="font-size:15px;color:#333;margin-bottom:28px">Proudly built on PulseChain. Explore the ecosystem.</p>
+
+    <a href="https://pulsechain.com" target="_blank" class="pulse-card">
+      <div class="pulse-left">
+        <div class="pulse-logo">
+          <img src="/logos/pls.png" width="48" height="48" style="display:block">
+        </div>
+        <div>
+          <div class="pulse-name">PulseChain <span style="font-family:var(--mono);font-size:11px;color:#999;font-weight:400">PLS</span></div>
+          <div class="pulse-desc">Energy efficient, fee-burning Ethereum fork. 3 second blocks. Sub-cent gas. The blockchain Immuta is built on.</div>
+        </div>
+      </div>
+      <div class="eco-link">pulsechain.com →</div>
+    </a>
+
+    <div class="tokens-grid">
+      <a href="https://hex.com" target="_blank" class="token-card">
+        <div class="token-logo"><img src="/logos/hex.png" width="44" height="44"></div>
+        <div class="token-name">HEX</div>
+        <div class="token-ticker">HEX · Staking</div>
+        <div class="token-desc">Time-locked staking and trustless yield. A self-custody savings account enforced entirely by smart contract.</div>
+        <div class="token-link">hex.com →</div>
+      </a>
+      <a href="https://pulsex.com" target="_blank" class="token-card">
+        <div class="token-logo"><img src="/logos/plsx.png" width="44" height="44"></div>
+        <div class="token-name">PulseX</div>
+        <div class="token-ticker">PLSX · DEX</div>
+        <div class="token-desc">PulseChain's native decentralized exchange. Ultra-low fees, buy-and-burn mechanics, deepest liquidity on the network.</div>
+        <div class="token-link">pulsex.com →</div>
+      </a>
+      <a href="https://app.provex.com" target="_blank" class="token-card">
+        <div class="token-logo"><img src="/logos/provex.png" width="44" height="44"></div>
+        <div class="token-name">ProveX</div>
+        <div class="token-ticker">PRVX · Proof Protocol</div>
+        <div class="token-desc">P2P fiat-to-crypto protocol. No exchange. No KYC. Replace trust with cryptographic proof.</div>
+        <div class="token-link">provex.com →</div>
+      </a>
+    </div>
+
+    <div class="tools-label">Ecosystem tools</div>
+    <div class="tools-grid">
+      <a href="https://libertyswap.finance" target="_blank" class="tool-card">
+        <div class="tool-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#22c55e" stroke-width="1.2" fill="none"/><path d="M5 9h8M11 6l3 3-3 3" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="tool-name">Liberty Swap</div><div class="tool-desc">DEX · PulseChain</div></div>
+      </a>
+      <a href="https://piteas.io" target="_blank" class="tool-card">
+        <div class="tool-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L16 6V12L9 16L2 12V6L9 2Z" stroke="#f59e0b" stroke-width="1.2" fill="none"/><path d="M6 9h6M9 6v6" stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div><div class="tool-name">Piteas</div><div class="tool-desc">DEX Aggregator</div></div>
+      </a>
+      <a href="https://www.lookintomaxi.com" target="_blank" class="tool-card">
+        <div class="tool-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5" stroke="#818cf8" stroke-width="1.2" fill="none"/><path d="M11.5 11.5l4 4" stroke="#818cf8" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <div><div class="tool-name">LookIntoMaxi</div><div class="tool-desc">Analytics</div></div>
+      </a>
+      <a href="https://www.peer.xyz" target="_blank" class="tool-card">
+        <div class="tool-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="6" cy="9" r="3.5" stroke="#ec4899" stroke-width="1.2" fill="none"/><circle cx="12" cy="9" r="3.5" stroke="#8b5cf6" stroke-width="1.2" fill="none"/></svg></div>
+        <div><div class="tool-name">Peer.xyz</div><div class="tool-desc">P2P Onramp</div></div>
+      </a>
+      <a href="https://www.pulsechainstats.com" target="_blank" class="tool-card">
+        <div class="tool-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="11" width="3" height="5" rx="1" fill="#38bdf8"/><rect x="7" y="8" width="3" height="8" rx="1" fill="#38bdf8" opacity="0.8"/><rect x="12" y="4" width="3" height="12" rx="1" fill="#38bdf8" opacity="0.6"/></svg></div>
+        <div><div class="tool-name">PulseChain Stats</div><div class="tool-desc">Network Stats</div></div>
+      </a>
+      <a href="https://gopulse.com" target="_blank" class="tool-card">
+        <div class="tool-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="#10b981" stroke-width="1.2" fill="none"/><path d="M9 5v4l2.5 2.5" stroke="#10b981" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div><div class="tool-name">GoPulse</div><div class="tool-desc">Stats · PulseChain</div></div>
+      </a>
+    </div>
+
+    <div class="align-box">
+      <div style="width:32px;height:32px;border-radius:7px;background:#ede9fe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L13.5 4.5V11.5L8 14.5L2.5 11.5V4.5L8 1.5Z" stroke="#4f46e5" stroke-width="1.1" fill="none"/><path d="M5.5 8L7 9.5L10.5 6" stroke="#4f46e5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="align-text"><strong style="font-weight:600">Immuta and ProveX share the same conviction</strong> — that trust should be replaced by proof, and intermediaries made obsolete by mathematics.</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-pre">Obey the code</div>
+    <div class="cta-title">Your documents deserve permanent proof.</div>
+    <p class="cta-sub">$1. No account. No subscription. No data collected. Forever.</p>
+    <a href="app.html" class="btn-primary" style="display:inline-flex;font-size:16px;padding:14px 30px">Seal your first document →</a>
+    <div class="cta-note">Don't trust us. Trust the code.</div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">© 2025 Immuta Protocol · Built on PulseChain</div>
+  <div class="footer-obey">Obey the code.</div>
+  <div class="footer-links">
+    <button class="footer-link">Privacy</button>
+    <button class="footer-link">Terms</button>
+    <a href="https://scan.pulsechain.com" target="_blank" class="footer-link">PulseScan</a>
+    <a href="https://github.com/Thanos-admin/immuta" target="_blank" class="footer-link">GitHub</a>
+  </div>
+</footer>
+
+<div class="easter" id="easter">
+  <div class="easter-content">
+    <div class="easter-glasses">
+      <svg width="72" height="26" viewBox="0 0 72 26" fill="none">
+        <rect x="1" y="6" width="28" height="15" rx="7.5" stroke="#4f46e5" stroke-width="1.4" fill="#060606"/>
+        <rect x="43" y="6" width="28" height="15" rx="7.5" stroke="#4f46e5" stroke-width="1.4" fill="#060606"/>
+        <path d="M29 13.5h14" stroke="#4f46e5" stroke-width="1.4"/>
+        <path d="M0 13.5h1M71 13.5h1" stroke="#4f46e5" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="easter-reveal">You put on the glasses</div>
+    <div class="easter-title">Who is Richard Heart?</div>
+    <div class="easter-body">
+      Builder. Visionary. Polarising. Proven.<br><br>
+      Founder of <em>HEX, PulseChain, and ProveX</em> — the man who set out to fix the money and fix the world. He built infrastructure designed to survive without him. Trustless by design. Permanent by nature.<br><br>
+      Immuta exists in that tradition. We built on PulseChain because we believe in what is being built here.
+    </div>
+    <div class="video-ph">[ Add your video here ]</div>
+    <div class="easter-fix">Fix the money. Fix the world.</div>
+    <div class="easter-sub">Don't trust him. Verify the chain.</div>
+    <div class="easter-btns">
+      <button class="btn-sleep" onclick="closeEaster()">Go back to sleep</button>
+      <a href="https://pulsechain.com" target="_blank" class="btn-awake">Stay awake →</a>
+    </div>
   </div>
 </div>
 
 <script>
-const CONTRACT_ADDRESS = "0x0C2a0F6289D1Af62fc2C90301f8a0CadcD017e5c";
-const TDAI_ADDRESS = "0x826e4e896CC2f5B371Cd7Bb0bd929DB3e3DB67c0";
-const CHAIN_ID = 943;
-
-const ABI = [
-  "function storeHash(bytes32 _hash, string calldata _label, string calldata _note) external",
-  "function getRecord(bytes32 _hash) external view returns (tuple(bytes32 hash, address submitter, uint256 timestamp, string label, string note))",
-  "function fee() external view returns (uint256)"
-];
-
-const ERC20_ABI = [
-  "function approve(address spender, uint256 amount) external returns (bool)",
-  "function allowance(address owner, address spender) external view returns (uint256)"
-];
-
-let provider, signer, currentHash, verifyHash;
-
-async function connectWallet() {
-  if (!window.ethereum) {
-    alert("MetaMask not found. Please install MetaMask.");
-    return;
-  }
-  try {
-    provider = new ethers.BrowserProvider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-
-    // Switch to PulseChain testnet
-    try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x" + CHAIN_ID.toString(16) }]
-      });
-    } catch (switchError) {
-      if (switchError.code === 4902) {
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [{
-            chainId: "0x" + CHAIN_ID.toString(16),
-            chainName: "PulseChain Testnet V4",
-            nativeCurrency: { name: "tPLS", symbol: "tPLS", decimals: 18 },
-            rpcUrls: ["https://pulsechain-testnet-rpc.publicnode.com"],
-            blockExplorerUrls: ["https://scan.v4.testnet.pulsechain.com"]
-          }]
-        });
-      }
-    }
-
-    signer = await provider.getSigner();
-    const address = await signer.getAddress();
-    const short = address.slice(0,6) + "..." + address.slice(-4);
-    document.getElementById("wallet-btn").textContent = short;
-  } catch (err) {
-    alert("Connection failed: " + err.message);
-  }
-}
-
-async function sha256(data) {
-  const buf = typeof data === "string" ? new TextEncoder().encode(data) : data;
-  const hash = await crypto.subtle.digest("SHA-256", buf);
-  return "0x" + Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,"0")).join("");
-}
-
-async function onFileChange(inp) {
-  if (!inp.files[0]) return;
-  document.getElementById("text-input").value = "";
-  const buf = await inp.files[0].arrayBuffer();
-  currentHash = await sha256(buf);
-  document.getElementById("hash-display").textContent = currentHash;
-  document.getElementById("hash-wrap").style.display = "block";
-}
-
-async function onTextInput(inp) {
-  if (!inp.value.trim()) { document.getElementById("hash-wrap").style.display = "none"; return; }
-  document.getElementById("file-input").value = "";
-  currentHash = await sha256(inp.value);
-  document.getElementById("hash-display").textContent = currentHash;
-  document.getElementById("hash-wrap").style.display = "block";
-}
-
-async function onVerifyFile(inp) {
-  if (!inp.files[0]) return;
-  document.getElementById("verify-text").value = "";
-  const buf = await inp.files[0].arrayBuffer();
-  verifyHash = await sha256(buf);
-  document.getElementById("verify-hash-display").textContent = verifyHash;
-  document.getElementById("verify-hash-wrap").style.display = "block";
-}
-
-async function onVerifyText(inp) {
-  if (!inp.value.trim()) { document.getElementById("verify-hash-wrap").style.display = "none"; return; }
-  document.getElementById("verify-file").value = "";
-  verifyHash = await sha256(inp.value);
-  document.getElementById("verify-hash-display").textContent = verifyHash;
-  document.getElementById("verify-hash-wrap").style.display = "block";
-}
-
-function updateCount(inputId, countId, max) {
-  const len = document.getElementById(inputId).value.length;
-  document.getElementById(countId).textContent = len + " / " + max;
-}
-
-function setStep(n, state) {
-  const el = document.getElementById("step" + n + "-num");
-  el.className = "step-num " + state;
-  if (state === "done") el.textContent = "✓";
-  else el.textContent = n;
-}
-
-async function sealDocument() {
-  const el = document.getElementById("seal-status");
-  const btn = document.getElementById("seal-btn");
-  const label = document.getElementById("label-input").value.trim();
-  const note = document.getElementById("note-input").value.trim();
-
-  if (!currentHash) { el.className="status error"; el.textContent="Select a file or enter text first."; return; }
-  if (!label) { el.className="status error"; el.textContent="Add a label before sealing."; return; }
-  if (!signer) { el.className="status error"; el.textContent="Connect your wallet first."; return; }
-
-  document.getElementById("steps").style.display = "block";
-  btn.disabled = true;
-
-  try {
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-    const tdai = new ethers.Contract(TDAI_ADDRESS, ERC20_ABI, signer);
-    const userAddress = await signer.getAddress();
-    const fee = await contract.fee();
-
-    // Step 1 — check allowance and approve if needed
-    setStep(1, "active");
-    el.className="status info"; el.innerHTML='<span class="loader"></span> Checking tDAI allowance...';
-
-    const allowance = await tdai.allowance(userAddress, CONTRACT_ADDRESS);
-    if (allowance < fee) {
-      el.innerHTML='<span class="loader"></span> Approving tDAI — confirm in MetaMask...';
-      const approveTx = await tdai.approve(CONTRACT_ADDRESS, fee);
-      await approveTx.wait();
-    }
-    setStep(1, "done");
-
-    // Step 2 — seal
-    setStep(2, "active");
-    el.innerHTML='<span class="loader"></span> Sealing on PulseChain — confirm in MetaMask...';
-
-    const hashBytes = ethers.getBytes(currentHash);
-    const tx = await contract.storeHash(hashBytes, label, note);
-    el.innerHTML='<span class="loader"></span> Broadcasting...';
-    const receipt = await tx.wait();
-
-    setStep(2, "done");
-    el.className="status success";
-    el.innerHTML=`Sealed successfully.<br><span style="font-family:monospace;font-size:11px">TX: ${receipt.hash.slice(0,20)}...</span><br><a href="https://scan.v4.testnet.pulsechain.com/tx/${receipt.hash}" target="_blank" style="font-size:12px;color:#166534">View on PulseScan →</a>`;
-
-  } catch (err) {
-    el.className="status error";
-    el.textContent = "Error: " + (err.reason || err.message);
-  }
-
-  btn.disabled = false;
-}
-
-async function verifyDocument() {
-  const el = document.getElementById("verify-status");
-  if (!verifyHash) { el.className="status error"; el.textContent="Select a file or enter text first."; return; }
-
-  el.className="status info"; el.innerHTML='<span class="loader"></span> Querying contract...';
-
-  try {
-    const rpc = new ethers.JsonRpcProvider("https://pulsechain-testnet-rpc.publicnode.com");
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, rpc);
-    const hashBytes = ethers.getBytes(verifyHash);
-    const record = await contract.getRecord(hashBytes);
-
-    if (record.timestamp > 0n) {
-      const date = new Date(Number(record.timestamp) * 1000).toLocaleString();
-      el.className="status success";
-      el.innerHTML=`<strong>Verified on PulseChain</strong><br>
-        Label: ${record.label}<br>
-        Sealed: ${date}<br>
-        By: <span style="font-family:monospace;font-size:11px">${record.submitter}</span><br>
-        ${record.note ? `Note: ${record.note}` : ""}`;
-    } else {
-      el.className="status error";
-      el.textContent="Not found. This content has never been sealed on Immuta, or has been altered.";
-    }
-  } catch (err) {
-    el.className="status error";
-    el.textContent="Error: " + err.message;
-  }
-}
+let hoverTimer = null;
+const sig = document.getElementById('sig');
+const overlay = document.getElementById('easter');
+sig.addEventListener('mouseenter', () => { hoverTimer = setTimeout(() => overlay.classList.add('on'), 3000); });
+sig.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
+function closeEaster() { overlay.classList.remove('on'); }
+overlay.addEventListener('click', e => { if(e.target === overlay) closeEaster(); });
 </script>
 </body>
 </html>
