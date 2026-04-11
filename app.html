@@ -243,7 +243,8 @@ const CHAIN_ID = 943;
 const ABI = [
   "function storeHash(bytes32,string,string) external",
   "function getRecord(bytes32) external view returns (tuple(bytes32 hash,address submitter,uint256 timestamp,string label,string note))",
-  "function fee() external view returns (uint256)"
+  "function fee() external view returns (uint256)",
+  "event HashStored(bytes32 indexed hash, address indexed submitter, uint256 timestamp, string label, string note)"
 ];
 const ERC20 = [
   "function approve(address,uint256) external returns (bool)",
