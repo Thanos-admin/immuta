@@ -220,17 +220,13 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
     <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:8px">Try it free — no wallet needed</div>
     <div style="font-family:var(--serif);font-size:22px;color:var(--ink);margin-bottom:6px">See your file fingerprint instantly</div>
     <p style="font-size:14px;color:#555;margin-bottom:20px">Drop any file below. Your SHA-256 fingerprint is computed locally — the file never leaves your device.</p>
-    <div id="demo-drop" style="border:1.5px dashed var(--border);border-radius:10px;padding:32px 24px;cursor:pointer;transition:border-color 0.2s;background:var(--off)" 
-         ondragover="event.preventDefault();this.style.borderColor='#4f46e5'" 
-         ondragleave="this.style.borderColor='var(--border)'"
-         ondrop="onDemoDrop(event)"
-         onclick="document.getElementById('demo-file').click()">
+    <div id="demo-drop" style="border:1.5px dashed var(--border);border-radius:10px;padding:32px 24px;cursor:pointer;transition:border-color 0.2s;background:var(--off)">
       <div style="font-size:28px;margin-bottom:8px">📄</div>
       <div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:4px">Drop any file here</div>
       <div style="font-size:12px;color:#777">or click to browse · document, photo, video, zip — anything</div>
-      <input type="file" id="demo-file" style="display:none" onchange="onDemoFile(this)">
+      <input type="file" id="demo-file" style="display:none">
       <div style="margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">
-        <button onclick="event.stopPropagation();tryDemoSample()" style="background:none;border:0.5px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;color:#555;cursor:pointer;font-family:var(--mono)">Try with sample text →</button>
+        <button id="demo-sample-btn" style="background:none;border:0.5px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;color:#555;cursor:pointer;font-family:var(--mono)">Try with sample text →</button>
       </div>
     </div>
     <div id="demo-result" style="display:none;margin-top:16px;text-align:left">
@@ -752,16 +748,79 @@ async function onDemoDrop(e) {
   document.getElementById('demo-drop').style.background = '#f0f0ff';
 }
 
-let hoverTimer = null;
-const sig = document.getElementById('sig');
+// Easter egg
 const overlay = document.getElementById('easter');
-sig.addEventListener('mouseenter', () => { hoverTimer = setTimeout(() => overlay.classList.add('on'), 3000); });
-sig.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
-// Mobile long press
+const sig = document.getElementById('sig');
+let hoverTimer = null;
 let touchTimer = null;
-sig.addEventListener('touchstart', () => { touchTimer = setTimeout(() => overlay.classList.add('on'), 1500); }, {passive:true});
-sig.addEventListener('touchend', () => clearTimeout(touchTimer));
-sig.addEventListener('touchmove', () => clearTimeout(touchTimer));
+
+if (sig) {
+  sig.addEventListener('mouseenter', function() {
+    hoverTimer = setTimeout(function() {
+      overlay.classList.add('on');
+    }, 3000);
+  });
+  sig.addEventListener('mouseleave', function() {
+    clearTimeout(hoverTimer);
+  });
+  sig.addEventListener('touchstart', function() {
+    touchTimer = setTimeout(function() {
+      overlay.classList.add('on');
+    }, 1500);
+  }, {passive:true});
+  sig.addEventListener('touchend', function() { clearTimeout(touchTimer); });
+  sig.addEventListener('touchmove', function() { clearTimeout(touchTimer); });
+}
+
+// Demo drop zone
+const dropZone = document.getElementById('demo-drop');
+const fileInput = document.getElementById('demo-file');
+const sampleBtn = document.getElementById('demo-sample-btn');
+
+if (dropZone) {
+  dropZone.addEventListener('click', function(e) {
+    if (e.target !== sampleBtn) fileInput.click();
+  });
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.style.borderColor = '#4f46e5';
+  });
+  dropZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--border)';
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.style.borderColor = 'var(--border)';
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+  });
+}
+
+if (fileInput) {
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files[0]) processFile(fileInput.files[0]);
+  });
+}
+
+if (sampleBtn) {
+  sampleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    tryDemoSample();
+  });
+}
+
+async function processFile(file) {
+  const buf = await file.arrayBuffer();
+  const hash = await demoSha256(buf);
+  document.getElementById('demo-hash').textContent = hash;
+  document.getElementById('demo-result').style.display = 'block';
+  dropZone.style.borderColor = '#4f46e5';
+  dropZone.style.background = '#f0f0ff';
+  checkWalletStatus();
+}
 function closeEaster() { overlay.classList.remove('on'); }
 overlay.addEventListener('click', e => { if(e.target === overlay) closeEaster(); });
 </script>
