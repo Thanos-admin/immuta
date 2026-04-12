@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Immuta — Don't trust us. Trust the code.</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -23,6 +23,29 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--white);color:var(--ink);overflow-x:hidden}
 
 .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:var(--white);border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:100}
+@media(max-width:768px){
+  .nav{padding:12px 20px}
+  .nav-links{gap:12px}
+  .nav-link{font-size:12px}
+  .nav-cta{padding:7px 14px;font-size:13px}
+  .hero{padding:48px 20px 40px}
+  .hero-title{font-size:clamp(30px,8vw,48px)}
+  .hero-sub{font-size:15px}
+  .hero-proof{gap:10px}
+  .section{padding:48px 20px}
+  .steps{grid-template-columns:1fr!important}
+  .cases{grid-template-columns:1fr}
+  .tokens-grid{grid-template-columns:1fr}
+  .tools-grid{grid-template-columns:1fr 1fr}
+  .nodata-grid{grid-template-columns:1fr 1fr}
+  .manifesto-section{padding:56px 20px}
+  .ecosystem{padding:48px 20px}
+  .cta-section{padding:56px 20px}
+  footer{padding:20px;flex-direction:column;gap:12px;text-align:center}
+  .footer-links{justify-content:center}
+  .reveal{grid-template-columns:1fr}
+  .metrics{grid-template-columns:1fr 1fr 1fr}
+}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .logomark{width:30px;height:30px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center}
 .wordmark{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.4px}
@@ -674,21 +697,32 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
 </div>
 
 <script>
+// ── SHA256 ──────────────────────────────────────────────
+async function demoSha256(data) {
+  const buf = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return '0x' + Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
-async function tryDemoSample() {
-  const sampleText = 'Immuta sample seal — ' + new Date().toISOString();
-  const hash = await demoSha256(sampleText);
+// ── DEMO HASH BOX ───────────────────────────────────────
+async function showHash(hash) {
   document.getElementById('demo-hash').textContent = hash;
   document.getElementById('demo-result').style.display = 'block';
-  document.getElementById('demo-drop').style.borderColor = '#4f46e5';
-  document.getElementById('demo-drop').style.background = '#f0f0ff';
+  const dz = document.getElementById('demo-drop');
+  if (dz) { dz.style.borderColor = '#4f46e5'; dz.style.background = '#f0f0ff'; }
   checkWalletStatus();
+}
+
+async function tryDemoSample() {
+  const hash = await demoSha256('Immuta sample seal — ' + new Date().toISOString());
+  showHash(hash);
 }
 
 function copyDemoHash() {
   const hash = document.getElementById('demo-hash').textContent;
   navigator.clipboard.writeText(hash).then(() => {
     const btn = document.getElementById('copy-btn');
+    if (!btn) return;
     btn.textContent = 'Copied!';
     btn.style.background = '#166534';
     setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = 'var(--ink)'; }, 2000);
@@ -702,127 +736,111 @@ async function checkWalletStatus() {
     const chainId = await window.ethereum.request({method:'eth_chainId'});
     const dot = document.getElementById('demo-status-dot');
     const text = document.getElementById('demo-status-text');
+    const btn = document.getElementById('demo-seal-btn');
     if (!dot || !text) return;
-    const sealBtn = document.getElementById('demo-seal-btn');
-    if (accounts.length === 0) {
+    if (!accounts.length) {
       dot.style.background = '#999';
       text.textContent = 'Wallet not connected — connect MetaMask to seal';
-      if (sealBtn) sealBtn.textContent = 'Connect wallet to seal →';
-    } else if (chainId !== '0x171') { // 369 in hex
+      if (btn) btn.textContent = 'Connect wallet to seal →';
+    } else if (chainId !== '0x171') {
       dot.style.background = '#f59e0b';
-      text.textContent = 'Wrong network — switch to PulseChain (Chain ID 369) to seal';
-      if (sealBtn) { sealBtn.textContent = 'Switch to PulseChain to seal →'; sealBtn.style.background = '#b45309'; }
+      text.textContent = 'Wrong network — switch to PulseChain (Chain ID 369)';
+      if (btn) { btn.textContent = 'Switch to PulseChain to seal →'; btn.style.background = '#b45309'; }
     } else {
       dot.style.background = '#16a34a';
-      text.textContent = 'Wallet ready — you're on PulseChain and ready to seal';
-      if (sealBtn) { sealBtn.textContent = 'Seal this on PulseChain for $1 →'; sealBtn.style.background = 'var(--ink)'; }
+      text.textContent = 'Wallet ready — you're on PulseChain';
+      if (btn) { btn.textContent = 'Seal this on PulseChain for $1 →'; btn.style.background = 'var(--ink)'; }
     }
   } catch(e) {}
 }
 
-async function demoSha256(data) {
-  const buf = typeof data === 'string' ? new TextEncoder().encode(data) : data;
-  const h = await crypto.subtle.digest('SHA-256', buf);
-  return '0x' + Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-async function onDemoFile(inp) {
-  if (!inp.files[0]) return;
-  const buf = await inp.files[0].arrayBuffer();
-  const hash = await demoSha256(buf);
-  document.getElementById('demo-hash').textContent = hash;
-  document.getElementById('demo-result').style.display = 'block';
-  document.getElementById('demo-drop').style.borderColor = '#4f46e5';
-  document.getElementById('demo-drop').style.background = '#f0f0ff';
-  checkWalletStatus();
-}
-async function onDemoDrop(e) {
-  e.preventDefault();
-  document.getElementById('demo-drop').style.borderColor = 'var(--border)';
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
-  const buf = await file.arrayBuffer();
-  const hash = await demoSha256(buf);
-  document.getElementById('demo-hash').textContent = hash;
-  document.getElementById('demo-result').style.display = 'block';
-  document.getElementById('demo-drop').style.borderColor = '#4f46e5';
-  document.getElementById('demo-drop').style.background = '#f0f0ff';
+// ── EASTER EGG ──────────────────────────────────────────
+function closeEaster() {
+  document.getElementById('easter').classList.remove('on');
 }
 
-// Easter egg
-const overlay = document.getElementById('easter');
-const sig = document.getElementById('sig');
-let hoverTimer = null;
-let touchTimer = null;
+// ── INIT (runs after DOM ready) ─────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
 
-if (sig) {
-  sig.addEventListener('mouseenter', function() {
-    hoverTimer = setTimeout(function() {
-      overlay.classList.add('on');
-    }, 3000);
-  });
-  sig.addEventListener('mouseleave', function() {
-    clearTimeout(hoverTimer);
-  });
-  sig.addEventListener('touchstart', function() {
-    touchTimer = setTimeout(function() {
-      overlay.classList.add('on');
-    }, 1500);
-  }, {passive:true});
-  sig.addEventListener('touchend', function() { clearTimeout(touchTimer); });
-  sig.addEventListener('touchmove', function() { clearTimeout(touchTimer); });
-}
+  // Easter egg — desktop hover
+  const sig = document.getElementById('sig');
+  const overlay = document.getElementById('easter');
+  let hoverTimer = null;
+  let touchTimer = null;
 
-// Demo drop zone
-const dropZone = document.getElementById('demo-drop');
-const fileInput = document.getElementById('demo-file');
-const sampleBtn = document.getElementById('demo-sample-btn');
+  if (sig && overlay) {
+    sig.addEventListener('mouseenter', function() {
+      hoverTimer = setTimeout(function() { overlay.classList.add('on'); }, 3000);
+    });
+    sig.addEventListener('mouseleave', function() { clearTimeout(hoverTimer); });
+    // Mobile long press
+    sig.addEventListener('touchstart', function() {
+      touchTimer = setTimeout(function() { overlay.classList.add('on'); }, 1500);
+    }, {passive:true});
+    sig.addEventListener('touchend', function() { clearTimeout(touchTimer); });
+    sig.addEventListener('touchmove', function() { clearTimeout(touchTimer); });
+  }
 
-if (dropZone) {
-  dropZone.addEventListener('click', function(e) {
-    if (e.target !== sampleBtn) fileInput.click();
-  });
-  dropZone.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropZone.style.borderColor = '#4f46e5';
-  });
-  dropZone.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    dropZone.style.borderColor = 'var(--border)';
-  });
-  dropZone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropZone.style.borderColor = 'var(--border)';
-    const file = e.dataTransfer.files[0];
-    if (file) processFile(file);
-  });
-}
+  // Close easter egg on background click
+  if (overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeEaster();
+    });
+  }
 
-if (fileInput) {
-  fileInput.addEventListener('change', function() {
-    if (fileInput.files[0]) processFile(fileInput.files[0]);
-  });
-}
+  // Demo drop zone
+  const dropZone = document.getElementById('demo-drop');
+  const fileInput = document.getElementById('demo-file');
+  const sampleBtn = document.getElementById('demo-sample-btn');
 
-if (sampleBtn) {
-  sampleBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    tryDemoSample();
-  });
-}
+  if (dropZone && fileInput) {
+    // Click to browse
+    dropZone.addEventListener('click', function(e) {
+      if (sampleBtn && (e.target === sampleBtn || sampleBtn.contains(e.target))) return;
+      fileInput.click();
+    });
 
-async function processFile(file) {
-  const buf = await file.arrayBuffer();
-  const hash = await demoSha256(buf);
-  document.getElementById('demo-hash').textContent = hash;
-  document.getElementById('demo-result').style.display = 'block';
-  dropZone.style.borderColor = '#4f46e5';
-  dropZone.style.background = '#f0f0ff';
-  checkWalletStatus();
-}
-function closeEaster() { overlay.classList.remove('on'); }
-overlay.addEventListener('click', e => { if(e.target === overlay) closeEaster(); });
+    // Drag over
+    dropZone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.style.borderColor = '#4f46e5';
+    });
+
+    // Drag leave
+    dropZone.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--border)';
+    });
+
+    // Drop
+    dropZone.addEventListener('drop', async function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.style.borderColor = 'var(--border)';
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      const hash = await demoSha256(await file.arrayBuffer());
+      showHash(hash);
+    });
+
+    // File input change
+    fileInput.addEventListener('change', async function() {
+      if (!fileInput.files[0]) return;
+      const hash = await demoSha256(await fileInput.files[0].arrayBuffer());
+      showHash(hash);
+    });
+  }
+
+  // Sample button
+  if (sampleBtn) {
+    sampleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      tryDemoSample();
+    });
+  }
+
+});
 </script>
 </body>
 </html>
