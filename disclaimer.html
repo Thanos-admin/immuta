@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Immuta — Disclaimer & Terms</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0d0d;
+  --white:#f0ede4;
+  --off:#e8e3d8;
+  --border:#ddd8cc;
+  --indigo:#4f46e5;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'Syne',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--white);color:var(--ink)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:var(--white);border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logomark{width:30px;height:30px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.wordmark{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.4px}
+.wordmark em{font-style:normal;color:var(--indigo)}
+.nav-home{font-size:14px;color:#555;text-decoration:none}
+.nav-home:hover{color:var(--ink)}
+
+.wrap{max-width:720px;margin:64px auto;padding:0 48px 80px}
+.page-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:10px}
+.page-title{font-family:var(--serif);font-size:42px;color:var(--ink);letter-spacing:-0.5px;margin-bottom:8px;line-height:1.1}
+.page-date{font-family:var(--mono);font-size:12px;color:#999;margin-bottom:48px}
+
+.section-title{font-family:var(--serif);font-size:22px;color:var(--ink);margin-bottom:12px;margin-top:40px}
+.section-title:first-of-type{margin-top:0}
+p{font-size:16px;color:#333;line-height:1.75;margin-bottom:16px}
+.highlight{background:var(--off);border-left:3px solid var(--indigo);padding:14px 20px;border-radius:0 8px 8px 0;margin:24px 0}
+.highlight p{margin:0;color:var(--ink);font-size:15px}
+ul{margin:0 0 16px 20px}
+ul li{font-size:16px;color:#333;line-height:1.75;margin-bottom:6px}
+
+footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--white);margin-top:40px}
+.footer-left{font-size:12px;color:#777;font-family:var(--mono)}
+.footer-link{font-size:12px;color:#777;text-decoration:none}
+.footer-link:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="logo">
+    <div class="logomark">
+      <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L15 5.5V12.5L9 16L3 12.5V5.5L9 2Z" stroke="#818cf8" stroke-width="1.2" fill="none"/>
+        <path d="M9 5L12 6.75V10.25L9 12L6 10.25V6.75L9 5Z" fill="#4f46e5"/>
+      </svg>
+    </div>
+    <span class="wordmark">immu<em>ta</em></span>
+  </a>
+  <a href="index.html" class="nav-home">← Back to Immuta</a>
+</nav>
+
+<div class="wrap">
+  <div class="page-label">Legal</div>
+  <h1 class="page-title">Disclaimer & Terms of Use</h1>
+  <div class="page-date">Last updated: April 2026</div>
+
+  <div class="highlight">
+    <p>Immuta is a document timestamping tool. It records a cryptographic fingerprint of your file on the PulseChain blockchain. It is not a legal service, a notary, or a substitute for legal advice. Please read this page before using the service.</p>
+  </div>
+
+  <h2 class="section-title">What Immuta does</h2>
+  <p>Immuta computes a SHA-256 hash of your file or text locally in your browser — the original file never leaves your device. It then registers that hash, along with a timestamp, your wallet address, a label, and an optional note, permanently on the PulseChain blockchain.</p>
+  <p>This creates a permanent, publicly verifiable record that a specific piece of content existed at a specific point in time, submitted by a specific wallet address.</p>
+
+  <h2 class="section-title">What Immuta does not do</h2>
+  <ul>
+    <li>Immuta does not verify the authenticity, accuracy, or legality of the content you seal.</li>
+    <li>Immuta does not provide legal advice or legal services of any kind.</li>
+    <li>Immuta does not guarantee that a blockchain timestamp will be accepted as evidence in any court or jurisdiction.</li>
+    <li>Immuta does not store your files, your identity, or any personal information.</li>
+    <li>Immuta does not have the ability to delete, modify, or reverse any record once it has been written to the blockchain.</li>
+  </ul>
+
+  <h2 class="section-title">No legal guarantee</h2>
+  <p>A blockchain timestamp is a strong cryptographic proof that content existed at a point in time. However, the legal weight and admissibility of blockchain evidence varies significantly between jurisdictions and legal systems. Immuta makes no representation that a seal will be accepted as legal proof in any specific legal proceeding.</p>
+  <p>If you require legally binding document authentication, you should consult a qualified legal professional in your jurisdiction.</p>
+
+  <h2 class="section-title">Fees are non-refundable</h2>
+  <p>All sealing fees ($1 per seal, paid in eUSDC, eUSDT, or eDAI on PulseChain) are non-refundable. Once a transaction is submitted to the blockchain it cannot be reversed, recalled, or refunded under any circumstances. This is a fundamental property of blockchain technology and is not within our control.</p>
+
+  <h2 class="section-title">Your responsibility</h2>
+  <p>You are solely responsible for:</p>
+  <ul>
+    <li>The content you choose to seal. Do not seal content that is illegal, that violates the rights of others, or that you do not have the right to seal.</li>
+    <li>The security of your wallet and private keys. Immuta has no access to your wallet and cannot recover it if lost.</li>
+    <li>Keeping a copy of your original file. Immuta only records the hash — not the file itself. Without the original file you cannot verify a seal.</li>
+    <li>Understanding the laws of your jurisdiction regarding blockchain evidence and cryptocurrency use.</li>
+  </ul>
+
+  <h2 class="section-title">No warranty</h2>
+  <p>Immuta is provided "as is" without warranty of any kind, express or implied. We do not guarantee that the service will be available at all times, that it will be error-free, or that records stored on the PulseChain blockchain will remain accessible indefinitely. Blockchain networks are operated by decentralised validators and their continued operation is not within our control.</p>
+
+  <h2 class="section-title">Limitation of liability</h2>
+  <p>To the maximum extent permitted by applicable law, Immuta and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service, including but not limited to loss of data, loss of funds, or failure of a seal to be accepted as legal evidence.</p>
+
+  <h2 class="section-title">Open source</h2>
+  <p>The Immuta smart contract and frontend code are open source and publicly available at <a href="https://github.com/Thanos-admin/immuta" target="_blank" style="color:var(--indigo)">github.com/Thanos-admin/immuta</a>. You are encouraged to review the code, verify how it works, and run your own instance if you wish.</p>
+
+  <h2 class="section-title">Changes to these terms</h2>
+  <p>We may update this page from time to time. The date at the top of this page reflects the most recent revision. Continued use of Immuta after any changes constitutes acceptance of the updated terms.</p>
+
+  <div class="highlight" style="margin-top:40px">
+    <p><strong style="font-weight:600">Don't trust us. Trust the code.</strong> The smart contract is the only authority on what Immuta does. Read it at <a href="https://github.com/Thanos-admin/immuta" target="_blank" style="color:var(--indigo)">github.com/Thanos-admin/immuta</a>.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">© 2026 Immuta Protocol · Built on PulseChain</div>
+  <a href="index.html" class="footer-link">← Back to Immuta</a>
+</footer>
+
+</body>
+</html>
