@@ -704,17 +704,16 @@ async function demoSha256(data) {
 }
 
 // ── DEMO HASH BOX ───────────────────────────────────────
-async function showHash(hash) {
+function showHash(hash) {
   document.getElementById('demo-hash').textContent = hash;
   document.getElementById('demo-result').style.display = 'block';
-  const dz = document.getElementById('demo-drop');
+  var dz = document.getElementById('demo-drop');
   if (dz) { dz.style.borderColor = '#4f46e5'; dz.style.background = '#f0f0ff'; }
   checkWalletStatus();
 }
 
-async function tryDemoSample() {
-  const hash = await demoSha256('Immuta sample seal — ' + new Date().toISOString());
-  showHash(hash);
+function tryDemoSample() {
+  demoSha256('Immuta sample seal — ' + new Date().toISOString()).then(showHash);
 }
 
 function copyDemoHash() {
@@ -794,35 +793,46 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Demo — file input
-  const fileInput = document.getElementById('demo-file');
-  const sampleBtn = document.getElementById('demo-sample-btn');
-  const dropZone = document.getElementById('demo-drop');
+  // Demo — file input (label handles click natively via for="demo-file")
+  var fileInput = document.getElementById('demo-file');
+  var sampleBtn = document.getElementById('demo-sample-btn');
+  var dropZone = document.getElementById('demo-drop');
 
   if (fileInput) {
-    fileInput.addEventListener('change', async function() {
+    fileInput.addEventListener('change', function() {
       if (!fileInput.files[0]) return;
-      const hash = await demoSha256(await fileInput.files[0].arrayBuffer());
-      showHash(hash);
+      fileInput.files[0].arrayBuffer().then(function(buf) {
+        demoSha256(buf).then(showHash);
+      });
     });
   }
 
   if (sampleBtn) {
-    sampleBtn.addEventListener('click', async function() {
-      const hash = await demoSha256('Immuta sample seal — ' + new Date().toISOString());
-      showHash(hash);
+    sampleBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      demoSha256('Immuta sample seal — ' + new Date().toISOString()).then(showHash);
     });
   }
 
-  // Drag and drop on label
   if (dropZone) {
-    dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.style.borderColor = '#4f46e5'; });
-    dropZone.addEventListener('dragleave', function(e) { e.preventDefault(); dropZone.style.borderColor = 'var(--border)'; });
-    dropZone.addEventListener('drop', async function(e) {
+    dropZone.addEventListener('dragover', function(e) {
       e.preventDefault();
-      const file = e.dataTransfer.files[0];
+      e.stopPropagation();
+      dropZone.style.borderColor = '#4f46e5';
+    });
+    dropZone.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      dropZone.style.borderColor = '';
+    });
+    dropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var file = e.dataTransfer.files[0];
       if (!file) return;
-      showHash(await demoSha256(await file.arrayBuffer()));
+      file.arrayBuffer().then(function(buf) {
+        demoSha256(buf).then(showHash);
+      });
     });
   }
 
