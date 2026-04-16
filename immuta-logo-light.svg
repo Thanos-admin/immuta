@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 80" width="420" height="80">
+  <!-- Mark -->
+  <g transform="translate(0, 0) scale(0.38)">
+    <path d="M0 0L140 0L140 36L126 27L96 27L96 183L126 183L140 174L140 210L0 210L0 174L14 183L44 183L44 27L14 27L0 36Z" fill="#1a1a2e"/>
+    <line x1="8" y1="2" x2="132" y2="2" stroke="#4f46e5" stroke-width="2"/>
+    <line x1="8" y1="208" x2="132" y2="208" stroke="#4f46e5" stroke-width="2"/>
+    <rect x="48" y="68" width="44" height="74" rx="4" fill="#0a0a1a"/>
+    <path d="M70 74L88 84L88 126L70 136L52 126L52 84Z" fill="none" stroke="#818cf8" stroke-width="1"/>
+    <path d="M70 84L82 91L82 119L70 126L58 119L58 91Z" fill="#4f46e5"/>
+    <path d="M70 94L76 98L76 112L70 116L64 112L64 98Z" fill="#818cf8"/>
+    <circle cx="67" cy="100" r="2.5" fill="#c7d2fe" opacity="0.85"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="72" y="42" style="font-family:'Syne',system-ui,sans-serif;font-size:36px;font-weight:700;fill:#ffffff;letter-spacing:3px;text-transform:uppercase">IMMU<tspan fill="#818cf8">TA</tspan></text>
+  <text x="74" y="62" style="font-family:'IBM Plex Mono',monospace;font-size:10px;fill:#555;letter-spacing:0.2em;text-transform:uppercase">seal anything · permanently</text>
+</svg>
