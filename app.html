@@ -84,7 +84,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
   </a>
   <div class="nav-right">
     <a href="index.html" class="home-link">← Home</a>
-    <a href="https://scan.v4.testnet.pulsechain.com" target="_blank" class="home-link">Explorer ↗</a>
+    <a href="https://scan.pulsechain.com" target="_blank" class="home-link">Explorer ↗</a>
     <button class="wallet-btn" id="wallet-btn" onclick="connectWallet()">Connect wallet</button>
   </div>
 </nav>
@@ -115,19 +115,18 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
       <div class="char-count" id="s-nc">0 / 500</div>
       <label>Pay with</label>
       <div class="token-select">
-        <button class="token-opt selected" onclick="selectToken(this,'tDAI')">tDAI</button>
-        <button class="token-opt" style="opacity:0.4;cursor:not-allowed" disabled>USDC</button>
-        <button class="token-opt" style="opacity:0.4;cursor:not-allowed" disabled>USDT</button>
+        <button class="token-opt selected" onclick="selectToken(this,'eDAI')">eDAI</button>
+        <button class="token-opt" onclick="selectToken(this,'eUSDC')">eUSDC</button>
+        <button class="token-opt" onclick="selectToken(this,'eUSDT')">eUSDT</button>
       </div>
-      <div style="font-size:11px;color:#999;font-family:var(--mono);margin-bottom:14px">USDC and USDT coming on mainnet</div>
       <div class="fee-row">
         <span class="fee-label">Sealing fee</span>
-        <span class="fee-amount">$1.00 tDAI</span>
+        <span class="fee-amount">$1.00</span>
       </div>
       <div id="s-steps" style="display:none" class="steps-wrap">
         <div class="step-row">
           <div class="step-num" id="sn1">1</div>
-          <div><div class="step-title">Approve tDAI</div><div class="step-desc">Allow Immuta to collect the $1 fee. Required once.</div></div>
+          <div><div class="step-title">Approve token</div><div class="step-desc">Allow Immuta to collect the $1 fee. Required once per token.</div></div>
         </div>
         <div class="step-row">
           <div class="step-num" id="sn2">2</div>
@@ -136,7 +135,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
       </div>
       <button class="btn" id="seal-btn" onclick="doSeal()">
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1.5L12 4V8C12 11 7 13 7 13C7 13 2 11 2 8V4L7 1.5Z" stroke="rgba(255,255,255,0.5)" stroke-width="1.1" fill="none"/><path d="M4.5 7L6 8.5L9.5 5.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Seal for $1 tDAI
+        Seal for $1
       </button>
       <div id="s-status"></div>
       <div id="s-cert-btn" style="display:none;margin-top:12px">
@@ -156,6 +155,11 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
         <label>Hash</label>
         <div class="hash-box" id="v-hash"></div>
       </div>
+      <label>Submitter wallet</label>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <input type="text" id="v-wallet" placeholder="0x... (wallet that sealed it)" style="margin:0;font-family:var(--mono);font-size:13px">
+        <button class="btn btn-outline" style="width:auto;padding:9px 14px;white-space:nowrap" onclick="fillMyWalletVerify()">Mine</button>
+      </div>
       <button class="btn" onclick="doVerify()">Check registry</button>
       <div id="v-status"></div>
       <div id="v-result"></div>
@@ -172,7 +176,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
       </div>
       <button class="btn btn-outline" style="margin-bottom:14px" onclick="loadMyWallet()">Use my wallet</button>
       <div style="padding:10px 14px;background:var(--off);border-radius:8px;margin-bottom:14px;font-size:12px;color:#555;font-family:var(--mono)">
-        Verify any transaction on the block explorer → <a href="https://scan.v4.testnet.pulsechain.com" target="_blank" style="color:var(--indigo);font-weight:500">scan.v4.testnet.pulsechain.com</a>
+        Verify any transaction on the block explorer → <a href="https://scan.pulsechain.com" target="_blank" style="color:var(--indigo);font-weight:500">scan.pulsechain.com</a>
       </div>
       <div id="a-result"></div>
     </div>
@@ -181,17 +185,21 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
 
 <script>
 const CONTRACT = "0x0C2a0F6289D1Af62fc2C90301f8a0CadcD017e5c";
-const TDAI = "0x826e4e896CC2f5B371Cd7Bb0bd929DB3e3DB67c0";
-const CHAIN_ID = 943;
-const RPC = "https://pulsechain-testnet-rpc.publicnode.com";
-const EXPLORER = "https://scan.v4.testnet.pulsechain.com";
+const TOKENS = {
+  eDAI:  "0xefD766cCb38EaF1dfd701853BFCe31359239F305",
+  eUSDC: "0x15D38573d2feeb82e7ad5187aB8c1D52810B1f07",
+  eUSDT: "0x0Cb6F5a34ad42ec934882A05265A7d5F59b51A2f"
+};
+const CHAIN_ID = 369;
+const RPC = "https://rpc.pulsechainstats.com";
+const EXPLORER = "https://scan.pulsechain.com";
 const SITE = "https://immuta.app";
 
 const ABI = [
-  "function storeHash(bytes32,string,string) external",
-  "function getRecord(bytes32) external view returns (tuple(bytes32 hash,address submitter,uint256 timestamp,string label,string note))",
-  "function fee() external view returns (uint256)",
-  "event HashStored(bytes32 indexed hash, address indexed submitter, uint256 timestamp, string label, string note)"
+  "function storeHash(bytes32,string,string,address) external",
+  "function getRecord(bytes32,address) external view returns (tuple(bytes32 hash,address submitter,uint256 timestamp,string label,string note,address token))",
+  "function tokenFees(address) external view returns (uint256)",
+  "event HashStored(bytes32 indexed hash, address indexed submitter, address indexed token, uint256 timestamp, string label, string note)"
 ];
 const ERC20 = [
   "function approve(address,uint256) external returns (bool)",
@@ -200,6 +208,7 @@ const ERC20 = [
 
 const provider_read = new ethers.JsonRpcProvider(RPC);
 let provider, signer, currentHash, verifyHash, lastSeal = {};
+let selectedToken = 'eDAI';
 
 function switchTab(id, btn) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -211,6 +220,7 @@ function switchTab(id, btn) {
 function selectToken(btn, token) {
   document.querySelectorAll('.token-opt').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
+  selectedToken = token;
 }
 
 async function connectWallet() {
@@ -223,8 +233,8 @@ async function connectWallet() {
     } catch(e) {
       if (e.code===4902) await window.ethereum.request({method:"wallet_addEthereumChain",params:[{
         chainId:"0x"+CHAIN_ID.toString(16),
-        chainName:"PulseChain Testnet V4",
-        nativeCurrency:{name:"tPLS",symbol:"tPLS",decimals:18},
+        chainName:"PulseChain",
+        nativeCurrency:{name:"PLS",symbol:"PLS",decimals:18},
         rpcUrls:[RPC],
         blockExplorerUrls:[EXPLORER]
       }]});
@@ -294,21 +304,22 @@ async function doSeal() {
   btn.disabled=true;
 
   try {
+    const tokenAddr = TOKENS[selectedToken];
     const contract = new ethers.Contract(CONTRACT, ABI, signer);
-    const tdai = new ethers.Contract(TDAI, ERC20, signer);
+    const token = new ethers.Contract(tokenAddr, ERC20, signer);
     const userAddr = await signer.getAddress();
-    const fee = await contract.fee();
+    const fee = await contract.tokenFees(tokenAddr);
 
     setStep(1,'active');
     el.className='status s-info'; el.innerHTML='<span class="loader"></span> Checking allowance...';
-    const allowance = await tdai.allowance(userAddr, CONTRACT);
+    const allowance = await token.allowance(userAddr, CONTRACT);
     if (allowance < fee) {
-      el.innerHTML='<span class="loader"></span> Approve tDAI in MetaMask...';
-      await (await tdai.approve(CONTRACT, fee)).wait();
+      el.innerHTML='<span class="loader"></span> Approve '+selectedToken+' in MetaMask...';
+      await (await token.approve(CONTRACT, fee)).wait();
     }
     setStep(1,'done'); setStep(2,'active');
     el.innerHTML='<span class="loader"></span> Confirm in MetaMask...';
-    const tx = await contract.storeHash(ethers.getBytes(currentHash), label, note);
+    const tx = await contract.storeHash(ethers.getBytes(currentHash), label, note, tokenAddr);
     el.innerHTML='<span class="loader"></span> Broadcasting...';
     const receipt = await tx.wait();
     setStep(2,'done');
@@ -338,12 +349,14 @@ async function doSeal() {
 async function doVerify() {
   const el = document.getElementById('v-status');
   const res = document.getElementById('v-result');
+  const submitter = document.getElementById('v-wallet').value.trim();
   if (!verifyHash) { el.className='status s-error'; el.textContent='Select a file or enter text first.'; return; }
+  if (!submitter) { el.className='status s-error'; el.textContent='Enter the submitter wallet address.'; return; }
   el.className='status s-info'; el.innerHTML='<span class="loader loader-dark"></span> Querying contract...';
   res.innerHTML='';
   try {
     const contract = new ethers.Contract(CONTRACT, ABI, provider_read);
-    const record = await contract.getRecord(ethers.getBytes(verifyHash));
+    const record = await contract.getRecord(ethers.getBytes(verifyHash), submitter);
     if (record.timestamp > 0n) {
       const d = new Date(Number(record.timestamp)*1000).toLocaleString();
       el.className='status s-success'; el.textContent='Verified on PulseChain';
@@ -363,6 +376,11 @@ async function doVerify() {
       el.textContent='Not found. This content has not been sealed on Immuta, or has been altered since sealing.';
     }
   } catch(e) { el.className='status s-error'; el.textContent='Error: '+e.message; }
+}
+
+async function fillMyWalletVerify() {
+  if (!signer) { alert("Connect your wallet first."); return; }
+  document.getElementById('v-wallet').value = await signer.getAddress();
 }
 
 async function loadMyWallet() {
@@ -449,7 +467,7 @@ function downloadCert(data) {
     </div>
     <div class="cert-field"><div class="cert-key">Label</div><div class="cert-val serif">${data.label}</div></div>
     <div class="cert-field"><div class="cert-key">Sealed</div><div class="cert-val">${data.timestamp}</div></div>
-    <div class="cert-field"><div class="cert-key">Network</div><div class="cert-val">PulseChain Testnet · Chain ID 943</div></div>
+    <div class="cert-field"><div class="cert-key">Network</div><div class="cert-val">PulseChain Mainnet · Chain ID 369</div></div>
     ${data.tx ? `<div class="cert-field"><div class="cert-key">Transaction</div><div class="cert-val">${data.tx}</div></div>` : ''}
     <div class="cert-field"><div class="cert-key">Sealed by</div><div class="cert-val">${data.submitter}</div></div>
     ${data.note ? `<div class="cert-field"><div class="cert-key">Note</div><div class="cert-val serif">${data.note}</div></div>` : ''}
