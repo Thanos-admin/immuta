@@ -123,6 +123,10 @@ body{font-family:var(--sans);background:var(--white);color:var(--ink);overflow-x
 .tword:last-child{border-radius:0 6px 6px 0}
 .obey-big{font-family:var(--sans);font-size:clamp(36px,5.5vw,58px);font-weight:700;color:var(--white);letter-spacing:-2px;line-height:1;margin-bottom:24px}
 .obey-big em{font-style:normal;color:var(--indigo-l)}
+details summary::-webkit-details-marker{display:none}
+details summary::marker{content:''}
+details[open] summary span:last-child{transform:rotate(45deg);display:inline-block;transition:transform 0.2s}
+details summary span:last-child{transition:transform 0.2s;display:inline-block}
 .sig-row{display:flex;align-items:center;gap:14px}
 .sig-mark{width:40px;height:40px;border-radius:50%;background:#111;border:0.5px solid #333;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sig-label{font-family:var(--serif);font-size:13px;color:#888;font-style:italic}
@@ -222,6 +226,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
   <div class="nav-links">
     <button class="nav-link" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
     <button class="nav-link" onclick="document.getElementById('cases').scrollIntoView({behavior:'smooth'})">Use cases</button>
+    <button class="nav-link" onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</button>
     <button class="nav-link" onclick="document.getElementById('setup').scrollIntoView({behavior:'smooth'})">Get started</button><button class="nav-link" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About</button>
     <button class="nav-link" onclick="document.getElementById('ecosystem').scrollIntoView({behavior:'smooth'})">Ecosystem</button>
     <a href="app.html" class="nav-cta">Launch app</a>
@@ -277,6 +282,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
         <span id="demo-status-text">Wallet not connected — connect an EVM wallet (<a href="https://internetmoney.io" target="_blank" style="color:var(--indigo)">Internet Money</a>, <a href="https://metamask.io" target="_blank" style="color:var(--indigo)">MetaMask</a>, or <a href="https://brave.com/wallet" target="_blank" style="color:var(--indigo)">Brave Wallet</a>) on PulseChain to seal</span>
       </div>
       <a id="demo-seal-btn" href="app.html" style="display:block;text-align:center;background:var(--ink);color:var(--white);border-radius:10px;padding:12px;font-size:14px;font-weight:600;text-decoration:none">Seal this on PulseChain for $1 →</a>
+      <div style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:var(--mono)">New to PulseChain? <a href="#setup" style="color:var(--indigo);text-decoration:none">3-minute setup →</a></div>
     </div>
   </div>
 </div>
@@ -386,18 +392,44 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
         <div class="case-who">The tenant</div>
         <div class="case-story">Move-in day. Photograph every scratch, every mark. Seal the photos. When they try to keep your deposit — you have irrefutable proof of condition. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal move-in photos →</a></div>
       </div>
-      <div class="case">
-        <div class="case-who">The small business</div>
-        <div class="case-story">Seal contracts, invoices, and agreements the moment they're signed. No dispute about what was agreed, or when. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal an agreement →</a></div>
-      </div>
-      <div class="case">
-        <div class="case-who">The developer</div>
-        <div class="case-story">Timestamp code, architecture decisions, and IP disclosures. Prove prior art. Seal your work before anyone can challenge when it existed. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal your code →</a></div>
-      </div>
     </div>
     <div style="text-align:center;margin-top:36px">
       <div style="font-family:var(--serif);font-size:20px;color:var(--ink);font-style:italic;margin-bottom:6px">In the age of AI and disinformation —</div>
       <div style="font-family:var(--sans);font-size:24px;font-weight:700;color:var(--indigo);letter-spacing:-0.4px">Immuta it. Before they change it.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="faq">
+  <div class="section-inner">
+    <div class="section-label">Questions</div>
+    <div class="section-title">The things people ask first</div>
+    <p class="section-sub">Honest answers. No marketing.</p>
+    <div style="display:grid;gap:14px">
+      <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
+        <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Is an Immuta seal legally binding?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">A seal proves that the exact content of a file existed at a specific time on a public, immutable ledger. Cryptographic timestamps have been accepted as supporting evidence in many jurisdictions, but we're not lawyers and Immuta is not a substitute for one. Whether a particular court or contract accepts a blockchain timestamp depends on your jurisdiction and the specific matter. For anything with legal stakes, consult an attorney.</div>
+      </details>
+      <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
+        <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">What happens if Immuta shuts down?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">Nothing happens to your seals. They live on PulseChain, not on our server. Any block explorer — <a href="https://scan.pulsechain.com" target="_blank" style="color:var(--indigo)">scan.pulsechain.com</a>, <a href="https://pulsescanner.io" target="_blank" style="color:var(--indigo)">pulsescanner.io</a>, or any node you run yourself — can verify your seal forever. The frontend is a convenience. The protocol is the product.</div>
+      </details>
+      <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
+        <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">How is this different from emailing a file to myself?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">Email timestamps come from mail servers — centralized systems that can be edited, lost, or disputed. Headers can be forged; providers can delete mailboxes; jurisdictions can subpoena them. A PulseChain seal is a public transaction verified by hundreds of independent nodes worldwide. No one can alter it, delete it, or hide it — not you, not us, not a government.</div>
+      </details>
+      <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
+        <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Can anyone see what I sealed?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">No. Your file never leaves your device. Only the SHA-256 hash — a one-way 64-character fingerprint — is written to the blockchain, alongside your label, optional note, and wallet address. A hash cannot be reversed to reconstruct the file. Anyone with the original file can verify it matches the hash, but no one can figure out what the file was from the hash alone.</div>
+      </details>
+      <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
+        <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Why does it cost $1? Why not free?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">Someone has to pay for the blockchain transaction. The $1 fee covers PulseChain gas and keeps the protocol sustainable without ads, tracking, analytics, or a token we'd ever have to promote. The smart contract hardcodes a maximum fee of $10 — we cannot raise the price without redeploying an entirely new contract. The code is public. Verify it yourself.</div>
+      </details>
+      <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
+        <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">What if I want belt-and-suspenders proof?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">If the long-term survival of any single chain concerns you, seal the same file on multiple networks. Because SHA-256 is deterministic, the fingerprint is identical everywhere — the same hash on PulseChain, Bitcoin, or Ethereum all point to the exact same file. Redundancy is cheap when the unit of proof is one dollar.</div>
+      </details>
     </div>
   </div>
 </div>
@@ -435,7 +467,8 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
   <div class="section-inner" style="text-align:center">
     <div class="section-label">What you get</div>
     <div class="section-title">A professional certificate</div>
-    <p class="section-sub" style="margin:0 auto 32px">Every seal generates a downloadable PDF certificate with a QR code for instant verification.</p>
+    <p class="section-sub" style="margin:0 auto 18px">Every seal generates a downloadable PDF certificate with a QR code for instant verification.</p>
+    <div style="text-align:center;font-family:var(--mono);font-size:11px;color:var(--indigo);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:18px">↓ Our first seal — Immuta's own source code</div>
     <div style="max-width:540px;margin:0 auto;background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:32px;text-align:left;box-shadow:0 4px 24px rgba(0,0,0,0.06)">
       <div style="text-align:center;border-bottom:1px solid var(--ink);padding-bottom:16px;margin-bottom:18px">
         <div style="font-size:10px;letter-spacing:0.15em;color:#555;text-transform:uppercase;margin-bottom:4px;font-family:var(--mono)">Immuta Protocol · PulseChain Network</div>
@@ -444,25 +477,33 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
       </div>
       <div style="border-bottom:0.5px solid var(--border);padding:7px 0;display:flex">
         <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:110px;font-family:var(--mono)">Label</div>
-        <div style="font-size:13px;color:var(--ink);font-family:Georgia,serif">Q3 Contract — Client Approved</div>
+        <div style="font-size:13px;color:var(--ink);font-family:Georgia,serif">Immuta Protocol — Source Code v1.0 — April 2026</div>
       </div>
       <div style="border-bottom:0.5px solid var(--border);padding:7px 0;display:flex">
         <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:110px;font-family:var(--mono)">Sealed</div>
-        <div style="font-size:12px;color:var(--ink);font-family:var(--mono)">4/11/2026, 9:44:09 AM</div>
+        <div style="font-size:12px;color:var(--ink);font-family:var(--mono)">4/16/2026, 1:17:43 PM</div>
       </div>
       <div style="border-bottom:0.5px solid var(--border);padding:7px 0;display:flex">
         <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:110px;font-family:var(--mono)">Network</div>
-        <div style="font-size:12px;color:var(--ink);font-family:var(--mono)">PulseChain · Chain ID 369</div>
+        <div style="font-size:12px;color:var(--ink);font-family:var(--mono)">PulseChain Mainnet · Chain ID 369</div>
+      </div>
+      <div style="border-bottom:0.5px solid var(--border);padding:7px 0;display:flex">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:110px;font-family:var(--mono)">Transaction</div>
+        <a href="https://pulsescanner.io/scanner/tx/0x71b8ef162f42551cad57e4eaf5f2c1c1ad8781336d760ed59a2e42502923017c" target="_blank" rel="noopener" style="font-size:12px;color:var(--indigo);font-family:var(--mono);text-decoration:none;word-break:break-all">0x71b8ef162f42551cad57e4eaf5f2c1c1ad8781336d760ed59a2e42502923017c ↗</a>
       </div>
       <div style="border-bottom:0.5px solid var(--border);padding:7px 0;display:flex">
         <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:110px;font-family:var(--mono)">Sealed by</div>
-        <div style="font-size:12px;color:var(--ink);font-family:var(--mono)">0xfeD3b557EFbB592c1634e8C...</div>
+        <a href="https://pulsescanner.io/scanner/address/0xfeD3b557EFbB592c1634e8C597170f6733c3A905" target="_blank" rel="noopener" style="font-size:12px;color:var(--indigo);font-family:var(--mono);text-decoration:none">0xfeD3b557EFbB592c1634e8C597170f6733c3A905 ↗</a>
+      </div>
+      <div style="border-bottom:0.5px solid var(--border);padding:7px 0;display:flex">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;min-width:110px;font-family:var(--mono)">Note</div>
+        <div style="font-size:12px;color:var(--ink);font-family:Georgia,serif;line-height:1.5">Original source code for Immuta document sealing protocol. Smart contract deployed on PulseChain mainnet.</div>
       </div>
       <div style="margin-top:12px">
         <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#777;margin-bottom:6px;font-family:var(--mono)">SHA-256 Fingerprint</div>
-        <div style="background:var(--off);border-radius:6px;padding:8px 10px;font-family:var(--mono);font-size:10px;color:#333;word-break:break-all;line-height:1.5">0xa14f85b7bf36cc110c77137f6cb679c2669379da7ea28f1d8c6f7be4b62154f6</div>
+        <div style="background:var(--off);border-radius:6px;padding:8px 10px;font-family:var(--mono);font-size:10px;color:#333;word-break:break-all;line-height:1.5">0x592377391903857cdb47f5041c1992aba7d62c8f9100dfc715bb83aac16a450d</div>
       </div>
-      <div style="border-top:1px solid var(--ink);padding-top:14px;margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+      <div style="border-top:1px solid var(--ink);padding-top:14px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
         <div style="font-size:9px;color:#999;line-height:1.6;font-family:var(--mono);max-width:320px">Independently verifiable at scan.pulsechain.com · immuta.app</div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
           <div style="width:56px;height:56px;background:var(--off);border-radius:6px;display:flex;align-items:center;justify-content:center">
@@ -488,6 +529,9 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
         </div>
         <span style="font-size:10px;font-weight:600;color:#166534;background:#dcfce7;padding:4px 10px;border-radius:999px;font-family:var(--mono)">✓ Verified on-chain</span>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:18px">
+      <a href="https://pulsescanner.io/scanner/tx/0x71b8ef162f42551cad57e4eaf5f2c1c1ad8781336d760ed59a2e42502923017c" target="_blank" rel="noopener" style="font-size:13px;color:var(--indigo);text-decoration:none;font-weight:500">Verify this seal on PulseScanner →</a>
     </div>
   </div>
 </div>
@@ -631,7 +675,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
       <div class="nodata-cell"><div class="nodata-zero">0 accounts</div><div class="nodata-label">Required to use</div></div>
       <div class="nodata-cell"><div class="nodata-zero">100%</div><div class="nodata-label">On-chain verifiable</div></div>
     </div>
-    <div class="nodata-stmt">We cannot be subpoenaed for your data. We cannot be breached.<br><em>The code holds the record. Not us.</em></div>
+    <div class="nodata-stmt">There is nothing to subpoena. Nothing to breach.<br><em>The code holds the record. Not us.</em></div>
 
     <div style="margin-top:28px;padding:18px 24px;border:0.5px solid #333;border-radius:10px;text-align:left">
       <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#555;margin-bottom:8px">Our commitment</div>
@@ -744,8 +788,8 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
     © 2026 Immuta Protocol · Built on PulseChain<br>
     <span style="font-size:11px;color:#999;font-family:var(--mono)">Found it useful? <span style="color:#777">0x4e81cc07E09dfA86A3a224ff41b541551E9b3929</span></span>
   </div>
-  <div class="footer-obey">Obey the code.</div>
   <a href="https://t.me/Immuta_Admin" target="_blank" class="footer-link">Telegram</a>
+  <a href="https://x.com/Immuta_app" target="_blank" class="footer-link">X</a>
   <div class="footer-links">
     <a href="disclaimer.html" class="footer-link">Disclaimer & Terms</a>
     <a href="https://scan.pulsechain.com" target="_blank" class="footer-link">PulseScan</a>
