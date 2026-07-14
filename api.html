@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Immuta API — Notarization for AI agents. $1. No account.</title>
+<meta name="description" content="On-chain document notarization for AI agents via the x402 protocol. Send a SHA-256 hash, pay $1 in USDC, receive a permanent blockchain record and a PDF Certificate of Existence. No API keys, no signup.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0d0d;
+  --white:#f0ede4;
+  --off:#e8e3d8;
+  --red:#cc2200;
+  --indigo:#4f46e5;
+  --indigo-l:#818cf8;
+  --border:#ddd8cc;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'Syne',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--ink);overflow-x:hidden}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:var(--white);border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logomark{width:30px;height:30px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center;color:var(--white);font-family:var(--serif);font-size:17px}
+.wordmark{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.4px}
+.wordmark em{font-style:normal;color:var(--indigo)}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-size:14px;color:#555;text-decoration:none;font-family:var(--sans);font-weight:500}
+.nav-link:hover{color:var(--ink)}
+.nav-cta{background:var(--ink);color:var(--white);border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);text-decoration:none;display:inline-block}
+.nav-cta:hover{background:#333}
+
+.hero{padding:72px 48px 56px;max-width:860px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--off);border:0.5px solid var(--border);border-radius:999px;padding:5px 16px;font-size:12px;font-weight:500;color:#444;margin-bottom:24px;font-family:var(--mono)}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
+.hero-title{font-family:var(--serif);font-size:clamp(36px,5.5vw,56px);line-height:1.1;letter-spacing:-0.5px;color:var(--ink);margin-bottom:18px}
+.hero-title em{font-style:italic;color:var(--indigo)}
+.hero-sub{font-size:17px;color:#333;line-height:1.65;max-width:560px;margin:0 auto 32px}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.proof-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;font-family:var(--mono)}
+.proof-dot{width:5px;height:5px;border-radius:50%;background:var(--red)}
+
+.section{padding:64px 48px;border-top:0.5px solid var(--border)}
+.section-inner{max-width:860px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:8px}
+.section-title{font-family:var(--serif);font-size:32px;color:var(--ink);letter-spacing:-0.3px;margin-bottom:10px}
+.section-sub{font-size:16px;color:#333;line-height:1.65;max-width:560px;margin-bottom:36px}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border-radius:12px;overflow:hidden}
+.step{background:var(--white);padding:26px 22px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--off);color:var(--ink);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-family:var(--mono)}
+.step-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.step-desc{font-size:13px;color:#333;line-height:1.6}
+
+.code-block{background:var(--ink);border-radius:12px;padding:22px 24px;margin:0 0 14px;overflow-x:auto}
+.code-head{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#777;margin-bottom:12px}
+.code-block pre{font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#ddd;white-space:pre}
+.code-block .c{color:#777}
+.code-block .g{color:#8fd48f}
+.code-block .i{color:var(--indigo-l)}
+.code-note{font-size:12px;color:#555;font-family:var(--mono);margin-bottom:36px}
+
+.endpoints{display:grid;grid-template-columns:1fr;gap:14px}
+.endpoint{border:0.5px solid var(--border);border-radius:12px;padding:22px;background:var(--white);display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:start}
+.ep-method{font-family:var(--mono);font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;background:var(--off);color:var(--ink);white-space:nowrap;margin-top:2px}
+.ep-path{font-family:var(--mono);font-size:14px;color:var(--ink);font-weight:500;margin-bottom:6px;word-break:break-all}
+.ep-desc{font-size:13px;color:#333;line-height:1.6}
+.ep-price{font-family:var(--serif);font-size:22px;color:var(--indigo);white-space:nowrap}
+.ep-free{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#555;border:0.5px solid var(--border);border-radius:6px;padding:4px 10px;margin-top:4px}
+
+.verify-box{background:var(--ink);border-radius:14px;padding:32px;margin-top:8px}
+.verify-title{font-family:var(--serif);font-size:22px;color:var(--white);font-style:italic;margin-bottom:16px}
+.verify-steps{list-style:none}
+.verify-steps li{display:flex;gap:12px;padding:9px 0;border-bottom:0.5px solid #1e1e1e;font-size:13.5px;color:#ccc;line-height:1.65}
+.verify-steps li:last-child{border-bottom:none}
+.verify-steps .vnum{font-family:var(--mono);color:var(--indigo-l);flex-shrink:0}
+.verify-steps code{font-family:var(--mono);font-size:12px;color:#8fd48f}
+
+.footer{display:flex;align-items:center;justify-content:space-between;padding:24px 48px;border-top:0.5px solid var(--border);flex-wrap:wrap;gap:12px}
+.footer-obey{font-family:var(--serif);font-style:italic;font-size:14px;color:#555}
+.footer-links{display:flex;gap:18px}
+.footer-link{font-size:12px;color:#555;text-decoration:none;font-family:var(--mono)}
+.footer-link:hover{color:var(--ink)}
+
+@media(max-width:768px){
+  .nav{padding:12px 20px}
+  .nav-links{gap:12px}
+  .nav-link{font-size:12px}
+  .nav-cta{padding:7px 14px;font-size:13px}
+  .hero{padding:44px 20px 36px}
+  .section{padding:44px 20px}
+  .steps{grid-template-columns:1fr}
+  .endpoint{grid-template-columns:1fr;gap:8px}
+  .ep-price{font-size:18px}
+  .footer{padding:20px;flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <div class="logomark">I</div>
+    <div class="wordmark">Immu<em>ta</em></div>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="#endpoints">Endpoints</a>
+    <a class="nav-link" href="#verify">Verify</a>
+    <a class="nav-cta" href="app.html">Seal a document</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><span class="badge-dot"></span>x402 · LIVE ON BASE + PULSECHAIN</div>
+  <h1 class="hero-title">Notarization your <em>agent</em> can buy.</h1>
+  <p class="hero-sub">One HTTP call. Your agent sends a SHA-256 hash, pays $1.00 in USDC, and receives a permanent on-chain record plus a PDF Certificate of Existence. No API keys. No account. No human in the loop.</p>
+  <div class="hero-proof">
+    <span class="proof-item"><span class="proof-dot"></span>The document never leaves your system</span>
+    <span class="proof-item"><span class="proof-dot"></span>Verifiable by anyone, forever</span>
+    <span class="proof-item"><span class="proof-dot"></span>Gasless for the buyer</span>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Quote. Pay. <em style="font-style:italic;color:var(--indigo)">Sealed.</em></h2>
+    <p class="section-sub">Immuta speaks x402 — the open protocol that lets software pay for HTTP resources with stablecoins. Any x402 client settles the whole flow in one call.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Hash locally</div>
+        <div class="step-desc">Compute the SHA-256 of your document on your side. Only the 64-character fingerprint is ever transmitted — the content stays with you.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">POST the hash</div>
+        <div class="step-desc">The API answers HTTP 402 with payment terms: $1.00 USDC on Base. Your x402 client signs the payment automatically — no gas needed.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Receive proof</div>
+        <div class="step-desc">The hash is written to the Immuta contract on PulseChain. You get the transaction, a text receipt, and a link to a PDF certificate.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="quickstart">
+  <div class="section-inner">
+    <div class="section-label">Quickstart</div>
+    <h2 class="section-title">See the price tag</h2>
+    <p class="section-sub">The paywall is the documentation. One curl shows you everything an agent needs.</p>
+
+    <div class="code-block">
+      <div class="code-head">Terminal — no auth, no signup</div>
+      <pre><span class="c"># Ask for a seal without paying — the 402 response carries the terms</span>
+curl -i https://api.immuta.app/seal \
+  -X POST -H <span class="g">"Content-Type: application/json"</span> \
+  -d <span class="g">'{"sha256": "&lt;64-hex-hash&gt;", "label": "contract-v2"}'</span>
+
+<span class="c"># → HTTP/2 402 · PAYMENT-REQUIRED header: $1.00 USDC · eip155:8453 (Base)</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-head">Python — pays and seals in one call</div>
+      <pre><span class="c"># pip install "x402[evm]" eth-account</span>
+<span class="i">from</span> eth_account <span class="i">import</span> Account
+<span class="i">from</span> x402.client <span class="i">import</span> x402ClientSync
+<span class="i">from</span> x402.http.clients <span class="i">import</span> x402_requests
+<span class="i">from</span> x402.mechanisms.evm.exact <span class="i">import</span> register_exact_evm_client
+<span class="i">import</span> hashlib, os
+
+client = x402ClientSync()
+register_exact_evm_client(client, Account.from_key(os.environ[<span class="g">"WALLET_KEY"</span>]))
+session = x402_requests(client)   <span class="c"># auto-pays any 402 it meets</span>
+
+h = hashlib.sha256(open(<span class="g">"contract.pdf"</span>,<span class="g">"rb"</span>).read()).hexdigest()
+r = session.post(<span class="g">"https://api.immuta.app/seal"</span>,
+                 json={<span class="g">"sha256"</span>: h, <span class="g">"label"</span>: <span class="g">"contract-v2"</span>})
+
+print(r.json()[<span class="g">"tx_hash"</span>])          <span class="c"># PulseChain transaction</span>
+print(r.json()[<span class="g">"receipt_pdf_url"</span>])  <span class="c"># PDF Certificate of Existence</span></pre>
+    </div>
+    <div class="code-note">TypeScript agents: @x402/fetch wraps fetch() the same way. Wallet needs USDC on Base — no ETH, the facilitator pays gas.</div>
+  </div>
+</section>
+
+<section class="section" id="endpoints">
+  <div class="section-inner">
+    <div class="section-label">Endpoints</div>
+    <h2 class="section-title">What's for sale</h2>
+    <p class="section-sub">Prices are quoted in the 402 response itself and settle in USDC on Base. Listed on the 402 Index and the x402 Bazaar.</p>
+    <div class="endpoints">
+      <div class="endpoint">
+        <div class="ep-method">POST</div>
+        <div>
+          <div class="ep-path">/seal</div>
+          <div class="ep-desc">Notarize a document. Body: <span style="font-family:var(--mono);font-size:12px">{"sha256", "label"?, "note"?}</span>. Returns the PulseChain transaction, block, timestamp, submitter, a text receipt, and a PDF certificate link. Duplicate hashes return 409 with the existing record — never double-charged.</div>
+        </div>
+        <div class="ep-price">$1.00</div>
+      </div>
+      <div class="endpoint">
+        <div class="ep-method">GET</div>
+        <div>
+          <div class="ep-path">/receipt/{sha256}.pdf?tx={tx_hash}</div>
+          <div class="ep-desc">Certificate of Existence as a PDF, rendered live from chain state. Regenerate anytime, forever. Transaction hashes are verified on-chain before they appear on the certificate.</div>
+        </div>
+        <div class="ep-free">Free</div>
+      </div>
+      <div class="endpoint">
+        <div class="ep-method">GET</div>
+        <div>
+          <div class="ep-path">/pulsechain/head</div>
+          <div class="ep-desc">Latest PulseChain block number and Unix timestamp, served from live chain state.</div>
+        </div>
+        <div class="ep-price">$0.001</div>
+      </div>
+      <div class="endpoint">
+        <div class="ep-method">GET</div>
+        <div>
+          <div class="ep-path">/pulsechain/block-by-timestamp?ts={unix}&mode=before|after</div>
+          <div class="ep-desc">Resolve any Unix timestamp to the exact PulseChain block at or nearest that moment. Precise to one block — built for tax lots, historical lookups, and event correlation.</div>
+        </div>
+        <div class="ep-price">$0.002</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="verify">
+  <div class="section-inner">
+    <div class="section-label">Don't trust us</div>
+    <h2 class="section-title">Verify it yourself</h2>
+    <p class="section-sub">Every seal is independently checkable. Immuta could disappear tomorrow and your proof would still stand.</p>
+    <div class="verify-box">
+      <div class="verify-title">Three ways to check a seal — none of them require us.</div>
+      <ul class="verify-steps">
+        <li><span class="vnum">01</span><span>Open the transaction on any PulseChain explorer: <code>otter.pulsechain.com/tx/&lt;tx_hash&gt;</code></span></li>
+        <li><span class="vnum">02</span><span>Call <code>getRecord(sha256, submitter)</code> on the Immuta contract — <code>0x0C2a0F6289D1Af62fc2C90301f8a0CadcD017e5c</code> — from any RPC or the explorer's Read Contract tab. The returned timestamp is the proof.</span></li>
+        <li><span class="vnum">03</span><span>Re-hash your document locally and confirm the SHA-256 matches the sealed fingerprint. If one byte changed, the hash won't.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-obey">Obey the code.</div>
+  <div class="footer-links">
+    <a href="index.html" class="footer-link">immuta.app</a>
+    <a href="https://402index.io" target="_blank" class="footer-link">402 Index</a>
+    <a href="disclaimer.html" class="footer-link">Disclaimer & Terms</a>
+  </div>
+</footer>
+
+</body>
+</html>
