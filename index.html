@@ -7,8 +7,20 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:image" content="https://immuta.app/og-image.png">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<meta name="description" content="Seal any file on PulseChain for $1. Immuta hashes your file in your browser and writes the SHA-256 fingerprint to the blockchain: permanent, independently verifiable proof it existed. The file never leaves your device.">
+<link rel="canonical" href="https://www.immuta.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.immuta.app/">
+<meta property="og:title" content="Immuta: seal anything on-chain for $1">
+<meta property="og:description" content="Permanent, independently verifiable proof that a file existed. Hashed in your browser; only the fingerprint goes on-chain.">
+<meta property="og:image" content="https://www.immuta.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Immuta_app">
+<meta name="twitter:title" content="Immuta: seal anything on-chain for $1">
+<meta name="twitter:description" content="Permanent, independently verifiable proof that a file existed. Hashed in your browser; only the fingerprint goes on-chain.">
+<meta name="twitter:image" content="https://www.immuta.app/og-image.png">
+<link rel="alternate" type="text/plain" title="LLM-readable docs" href="https://api.immuta.app/llms.txt">
+<link href="/fonts/fonts.css" rel="stylesheet">
 <style>
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -248,7 +260,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
   <div class="hero-proof">
     <div class="proof-item"><span class="proof-dot"></span>File never leaves your device</div>
     <div class="proof-item"><span class="proof-dot"></span>SHA-256 hashed client-side</div>
-    <div class="proof-item"><span class="proof-dot"></span>Zero data collected</div>
+    <div class="proof-item"><span class="proof-dot"></span>No personal data collected</div>
     <div class="proof-item"><span class="proof-dot"></span>$1 in eUSDC, eDAI or eUSDT</div>
   </div>
 </div>
@@ -387,11 +399,11 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
       </div>
       <div class="case">
         <div class="case-who">The creator</div>
-        <div class="case-story">You wrote it, photographed it, composed it first. Seal your original work before publishing. Prove authorship before anyone else can claim it. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal your original work →</a></div>
+        <div class="case-story">You wrote it, photographed it, composed it first. Seal your original work before publishing. Prove your version existed before anyone else can claim it. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal your original work →</a></div>
       </div>
       <div class="case">
         <div class="case-who">The tenant</div>
-        <div class="case-story">Move-in day. Photograph every scratch, every mark. Seal the photos. When they try to keep your deposit — you have irrefutable proof of condition. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal move-in photos →</a></div>
+        <div class="case-story">Move-in day. Photograph every scratch, every mark. Seal the photos. When they try to keep your deposit — you have timestamped proof of their condition. <a href="app.html" style="font-size:12px;color:var(--indigo);font-style:normal;white-space:nowrap">Seal move-in photos →</a></div>
       </div>
     </div>
     <div style="text-align:center;margin-top:36px">
@@ -425,7 +437,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
       </details>
       <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
         <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Why does it cost $1? Why not free?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
-        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">Someone has to pay for the blockchain transaction. The $1 fee covers PulseChain gas and keeps the protocol sustainable without ads, tracking, analytics, or a token we'd ever have to promote. The smart contract hardcodes a maximum fee of $10 — we cannot raise the price without redeploying an entirely new contract. The code is public. Verify it yourself.</div>
+        <div style="font-size:14px;color:#444;line-height:1.7;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">Someone has to pay for the blockchain transaction. The $1 fee keeps the protocol sustainable without ads, tracking, analytics, or a token we'd ever have to promote. You also pay a few cents of PLS for PulseChain gas, like any on-chain transaction. The fee is $1 and we've committed to never raising it. The code is public. Verify it yourself.</div>
       </details>
       <details style="border:0.5px solid var(--border);border-radius:12px;padding:18px 22px;background:var(--white)">
         <summary style="font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">What if I want belt-and-suspenders proof?<span style="color:var(--indigo);font-family:var(--mono);font-size:18px;font-weight:400">+</span></summary>
@@ -452,8 +464,8 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
         <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Shareable verification URL</div>
         <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Downloadable PDF certificate</div>
         <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Wallet audit log entry</div>
-        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Zero data collected</div>
-        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>PulseChain gas included</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>No personal data collected</div>
+        <div class="price-feat"><div class="feat-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#0d0d0d" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>PulseChain gas: a few cents of PLS, paid by you</div>
         <a href="app.html" class="price-btn">Seal your first document →</a>
         <div class="price-cap">One flat fee. No subscriptions. No hidden charges.</div>
       </div>
@@ -620,8 +632,8 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
       <p>The future doesn't ask for trust. It demands proof.</p>
       <p>Immuta is built on the belief that truth should be mathematical, permanence should be absolute, and verification should require no authority — only a blockchain. That the integrity of a record should not depend on the integrity of any single institution.</p>
       <p>We build on PulseChain because decentralized infrastructure should be fast enough, and affordable enough, to be genuinely useful — not a privilege reserved for those who can absorb the cost.</p>
-      <p>We hold no data. We keep no files. We collect no information beyond what the blockchain itself records — your hash, your label, your wallet address. That's it. Nothing else exists.</p>
-      <p>The $1 sealing fee is enforced by the smart contract — not by us. This is a security feature: the contract code limits the fee to a maximum of $10, protecting you from future price changes. We cannot raise the price without redeploying an entirely new contract. The code is public. Verify it yourself.</p>
+      <p>We keep no files and no user database. The only record of a seal is what the blockchain itself holds — your hash, your label, your note, your wallet address.</p>
+      <p>The $1 sealing fee is collected by the smart contract, in the open, on every seal. The fee is $1 and we've committed to never raising it. The code is public. Verify it yourself.</p>
     </div>
     <div class="manifesto-close">
       <div class="trilogy">
@@ -654,7 +666,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
   <div class="nodata-inner">
     <div class="section-label" style="color:#555;margin-bottom:14px">Transparency</div>
     <div class="nodata-title">We hold nothing.</div>
-    <p class="nodata-sub">No name. No email. No IP address. No analytics. No account. The only information that exists on-chain is what you chose to put there.</p>
+    <p class="nodata-sub">No name. No email. No account. No analytics or tracking cookies. Like any website, our host keeps short-lived server logs (IP address and time) for security; we never connect them to a seal. On-chain, the only information is what you chose to put there.</p>
     
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:#1a1a1a;border-radius:10px;overflow:hidden;margin-bottom:32px;text-align:left">
       <div style="background:#0d0d0d;padding:18px 20px">
@@ -676,7 +688,7 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
       <div class="nodata-cell"><div class="nodata-zero">0 accounts</div><div class="nodata-label">Required to use</div></div>
       <div class="nodata-cell"><div class="nodata-zero">100%</div><div class="nodata-label">On-chain verifiable</div></div>
     </div>
-    <div class="nodata-stmt">There is nothing to subpoena. Nothing to breach.<br><em>The code holds the record. Not us.</em></div>
+    <div class="nodata-stmt">No files to subpoena. No user database to breach.<br><em>The code holds the record. Not us.</em></div>
 
     <div style="margin-top:28px;padding:18px 24px;border:0.5px solid #333;border-radius:10px;text-align:left">
       <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#555;margin-bottom:8px">Our commitment</div>

@@ -5,7 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Immuta API — Notarization for AI agents. $1. No account.</title>
 <meta name="description" content="On-chain document notarization for AI agents via the x402 protocol. Send a SHA-256 hash, pay $1 in USDC, receive a permanent blockchain record and a PDF Certificate of Existence. No API keys, no signup.">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="canonical" href="https://www.immuta.app/api.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.immuta.app/api.html">
+<meta property="og:title" content="Immuta API: notarization your agent can buy">
+<meta property="og:description" content="Send a SHA-256 hash, pay $1 in USDC on Base via x402, get a permanent PulseChain record and a PDF certificate. HTTP or MCP. No API keys.">
+<meta property="og:image" content="https://www.immuta.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Immuta_app">
+<link href="/fonts/fonts.css" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -188,6 +196,22 @@ print(r.json()[<span class="g">"tx_hash"</span>])          <span class="c"># Pul
 print(r.json()[<span class="g">"receipt_pdf_url"</span>])  <span class="c"># PDF Certificate of Existence</span></pre>
     </div>
     <div class="code-note">TypeScript agents: @x402/fetch wraps fetch() the same way. Wallet needs USDC on Base — no ETH, the facilitator pays gas.</div>
+
+    <div class="code-block" style="margin-top:22px">
+      <div class="code-head">MCP — same tools, paid in-protocol</div>
+      <pre><span class="c"># Streamable HTTP endpoint · x402 payment travels in params._meta["x402/payment"]</span>
+https://api.immuta.app/mcp
+
+<span class="c"># Tools</span>
+seal_document(sha256, label?, note?)          <span class="c"># $1.00</span>
+verify_seal(sha256)                           <span class="c"># free</span>
+pulsechain_head()                             <span class="c"># $0.001</span>
+pulsechain_block_by_timestamp(ts, mode?)      <span class="c"># $0.002</span>
+
+<span class="c"># A call without payment returns the x402 PaymentRequired object as the tool result.</span>
+<span class="c"># x402 MCP clients (Python: x402.mcp · TypeScript: @x402/mcp) pay and retry automatically.</span></pre>
+    </div>
+    <div class="code-note">Discovery: <a href="https://api.immuta.app/.well-known/agent-card.json" style="color:var(--indigo)">agent card</a> · <a href="https://api.immuta.app/.well-known/mcp.json" style="color:var(--indigo)">MCP card</a> · <a href="https://api.immuta.app/.well-known/x402.json" style="color:var(--indigo)">x402 manifest</a> · <a href="https://api.immuta.app/llms.txt" style="color:var(--indigo)">llms.txt</a></div>
   </div>
 </section>
 
@@ -195,7 +219,7 @@ print(r.json()[<span class="g">"receipt_pdf_url"</span>])  <span class="c"># PDF
   <div class="section-inner">
     <div class="section-label">Endpoints</div>
     <h2 class="section-title">What's for sale</h2>
-    <p class="section-sub">Prices are quoted in the 402 response itself and settle in USDC on Base. Listed on the 402 Index and the x402 Bazaar.</p>
+    <p class="section-sub">Prices are quoted in the 402 response itself and settle in USDC on Base. Also available as MCP tools at <span style="font-family:var(--mono);font-size:13px">https://api.immuta.app/mcp</span>.</p>
     <div class="endpoints">
       <div class="endpoint">
         <div class="ep-method">POST</div>

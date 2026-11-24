@@ -1,0 +1,11 @@
+{
+  "redirects": [
+    { "source": "/llms.txt", "destination": "https://api.immuta.app/llms.txt", "permanent": false },
+    { "source": "/.well-known/x402", "destination": "https://api.immuta.app/.well-known/x402.json", "permanent": false },
+    { "source": "/.well-known/x402.json", "destination": "https://api.immuta.app/.well-known/x402.json", "permanent": false },
+    { "source": "/.well-known/agent-card.json", "destination": "https://api.immuta.app/.well-known/agent-card.json", "permanent": false },
+    { "source": "/.well-known/agent.json", "destination": "https://api.immuta.app/.well-known/agent-card.json", "permanent": false },
+    { "source": "/.well-known/mcp.json", "destination": "https://api.immuta.app/.well-known/mcp.json", "permanent": false },
+    { "source": "/mcp", "destination": "https://api.immuta.app/mcp", "permanent": false }
+  ]
+}
