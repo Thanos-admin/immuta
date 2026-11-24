@@ -91,7 +91,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
   </a>
   <div class="nav-right">
     <a href="index.html" class="home-link">← Home</a>
-    <a href="https://scan.pulsechain.com" target="_blank" class="home-link">Explorer ↗</a>
+    <a href="https://scan.pulsefusion.io" target="_blank" class="home-link">Explorer ↗</a>
     <button class="wallet-btn" id="wallet-btn" onclick="connectWallet()">Connect wallet</button>
   </div>
 </nav>
@@ -183,7 +183,7 @@ input:focus,textarea:focus{outline:none;border-color:var(--indigo);background:#f
       </div>
       <button class="btn btn-outline" style="margin-bottom:14px" onclick="loadMyWallet()">Use my wallet</button>
       <div style="padding:10px 14px;background:var(--off);border-radius:8px;margin-bottom:14px;font-size:12px;color:#555;font-family:var(--mono)">
-        Verify any transaction on the block explorer → <a href="https://scan.pulsechain.com" target="_blank" style="color:var(--indigo);font-weight:500">scan.pulsechain.com</a>
+        Verify any transaction on the block explorer → <a href="https://scan.pulsefusion.io" target="_blank" style="color:var(--indigo);font-weight:500">scan.pulsefusion.io</a>
       </div>
       <div id="a-result"></div>
     </div>
@@ -199,7 +199,7 @@ const TOKENS = {
 };
 const CHAIN_ID = 369;
 const RPC = "https://rpc.pulsechainstats.com";
-const EXPLORER = "https://scan.pulsechain.com";
+const EXPLORER = "https://scan.pulsefusion.io";
 const SITE = "https://immuta.app";
 
 const ABI = [
@@ -343,7 +343,7 @@ async function doSeal() {
         <div style="font-size:10px;font-weight:600;color:#166534;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;font-family:monospace">Transaction hash</div>
         <div style="font-family:monospace;font-size:10px;color:#166534;word-break:break-all;margin-bottom:6px">${receipt.hash}</div>
         <button onclick="var b=this;navigator.clipboard.writeText('${receipt.hash}').then(function(){b.textContent='✓ Copied!';b.style.background='#0d6630';setTimeout(function(){b.textContent='Copy TX hash';b.style.background='#166534'},2000)})" style="font-size:11px;background:#166534;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;font-family:monospace">Copy TX hash</button>
-        <span style="font-size:11px;color:#166534;margin-left:8px">Paste into PulseScan to verify</span>
+        <span style="font-size:11px;color:#166534;margin-left:8px">Paste into PulseFusion to verify</span>
       </div>`;
     document.getElementById('s-cert-btn').style.display='block';
   } catch(e) {
@@ -484,7 +484,7 @@ function downloadCert(data) {
       <div class="cert-disclaimer">
         This certificate was issued by Immuta Protocol and is anchored to the PulseChain blockchain.
         The document fingerprint was computed client-side — the original file was never transmitted or stored.
-        Independently verifiable at scan.pulsechain.com · immuta.app
+        Independently verifiable at scan.pulsefusion.io · immuta.app
       </div>
       <div class="cert-right">
         <div class="cert-verified">✓ Verified on-chain</div>

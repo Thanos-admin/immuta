@@ -273,7 +273,7 @@ pulsechain_block_by_timestamp(ts, mode?)      <span class="c"># $0.002</span>
     <div class="verify-box">
       <div class="verify-title">Three ways to check a seal — none of them require us.</div>
       <ul class="verify-steps">
-        <li><span class="vnum">01</span><span>Open the transaction on any PulseChain explorer: <code>otter.pulsechain.com/tx/&lt;tx_hash&gt;</code></span></li>
+        <li><span class="vnum">01</span><span>Open the transaction on any PulseChain explorer: <code>scan.pulsefusion.io/tx/&lt;tx_hash&gt;</code></span></li>
         <li><span class="vnum">02</span><span>Call <code>getRecord(sha256, submitter)</code> on the Immuta contract — <code>0x0C2a0F6289D1Af62fc2C90301f8a0CadcD017e5c</code> — from any RPC or the explorer's Read Contract tab. The returned timestamp is the proof.</span></li>
         <li><span class="vnum">03</span><span>Re-hash your document locally and confirm the SHA-256 matches the sealed fingerprint. If one byte changed, the hash won't.</span></li>
       </ul>
