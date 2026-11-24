@@ -346,15 +346,17 @@ footer{padding:22px 48px;border-top:0.5px solid var(--border);display:flex;align
         <div style="background:var(--white);padding:18px 20px;display:flex;gap:12px;align-items:flex-start">
           <div style="width:24px;height:24px;border-radius:50%;background:var(--off);color:var(--ink);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
           <div>
-            <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px">Click "View details"</div>
-            <div style="font-size:13px;color:#555;line-height:1.6">Under the transaction, click <strong>View details</strong> to expand the decoded input data. You'll see the exact <code style="background:var(--off);padding:1px 5px;border-radius:4px;font-size:12px">storeHash</code> call with your document's SHA-256 hash, label, note, and the token used — all written permanently to the blockchain.</div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px">Click "View details" and switch to UTF-8</div>
+            <div style="font-size:13px;color:#555;line-height:1.6">Scroll down and click <strong>View details</strong>. Find <strong>Raw input</strong> and change the dropdown from <strong>Hex</strong> to <strong>UTF-8</strong>. Your label and note appear as plain, human-readable text, written permanently on-chain. The symbols around them are normal: that's the hash and token address, which are binary data, not text.</div>
+            <img src="/img/verify-raw-input-utf8.png" width="1100" height="258" loading="lazy" alt="PulseFusion transaction page: Raw input switched to UTF-8 shows the seal label and note as readable text" style="display:block;width:100%;height:auto;margin-top:12px;border-radius:8px;border:0.5px solid var(--border)">
+            <div style="font-size:11px;color:#888;margin-top:6px;font-family:var(--mono)">Immuta's first seal on PulseFusion, Raw input set to UTF-8.</div>
           </div>
         </div>
         <div style="background:var(--white);padding:18px 20px;display:flex;gap:12px;align-items:flex-start">
           <div style="width:24px;height:24px;border-radius:50%;background:var(--off);color:var(--ink);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">4</div>
           <div>
-            <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px">Verify the hash matches</div>
-            <div style="font-size:13px;color:#555;line-height:1.6">Run <code style="background:var(--off);padding:1px 5px;border-radius:4px;font-size:12px">shasum -a 256 yourfile</code> on any computer and compare the output to the hash on-chain. If they match, the file hasn't been altered since it was sealed.</div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px">Check the fingerprint matches</div>
+            <div style="font-size:13px;color:#555;line-height:1.6">Switch <strong>Raw input</strong> back to <strong>Hex</strong>. Skip the first 10 characters (<code style="background:var(--off);padding:1px 5px;border-radius:4px;font-size:12px">0xa8294984</code>, the seal function); the next 64 characters are your document's SHA-256 fingerprint. Run <code style="background:var(--off);padding:1px 5px;border-radius:4px;font-size:12px">shasum -a 256 yourfile</code> (Mac/Linux) or <code style="background:var(--off);padding:1px 5px;border-radius:4px;font-size:12px">certutil -hashfile yourfile SHA256</code> (Windows) and compare. If they match, the file hasn't changed since it was sealed. Shortcut: open <code style="background:var(--off);padding:1px 5px;border-radius:4px;font-size:12px">api.immuta.app/verify/&lt;your-hash&gt;</code> for a free lookup.</div>
           </div>
         </div>
       </div>
