@@ -232,6 +232,14 @@ pulsechain_block_by_timestamp(ts, mode?)      <span class="c"># $0.002</span>
       <div class="endpoint">
         <div class="ep-method">GET</div>
         <div>
+          <div class="ep-path">/verify/{sha256}</div>
+          <div class="ep-desc">Was this hash ever sealed? Returns every seal of it — by anyone, from the website or the API — with timestamp, label, note, transaction, block and certificate link. No payment, no key. Also the free MCP tool <span style="font-family:var(--mono);font-size:12px">verify_seal</span>.</div>
+        </div>
+        <div class="ep-free">Free</div>
+      </div>
+      <div class="endpoint">
+        <div class="ep-method">GET</div>
+        <div>
           <div class="ep-path">/receipt/{sha256}.pdf?tx={tx_hash}</div>
           <div class="ep-desc">Certificate of Existence as a PDF, rendered live from chain state. Regenerate anytime, forever. Transaction hashes are verified on-chain before they appear on the certificate.</div>
         </div>
