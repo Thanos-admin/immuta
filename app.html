@@ -231,7 +231,7 @@ function selectToken(btn, token) {
 }
 
 async function connectWallet() {
-  if (!window.ethereum) { alert("Please install MetaMask or Internet Money wallet."); return; }
+  if (!window.ethereum) { alert("Please install an EVM-capable wallet (we recommend ZKX Wallet: zkxwallet.com) and open Immuta in it."); return; }
   try {
     provider = new ethers.BrowserProvider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
@@ -321,11 +321,11 @@ async function doSeal() {
     el.className='status s-info'; el.innerHTML='<span class="loader"></span> Checking allowance...';
     const allowance = await token.allowance(userAddr, CONTRACT);
     if (allowance < fee) {
-      el.innerHTML='<span class="loader"></span> Approve '+selectedToken+' in MetaMask...';
+      el.innerHTML='<span class="loader"></span> Approve '+selectedToken+' in your wallet...';
       await (await token.approve(CONTRACT, fee)).wait();
     }
     setStep(1,'done'); setStep(2,'active');
-    el.innerHTML='<span class="loader"></span> Confirm in MetaMask...';
+    el.innerHTML='<span class="loader"></span> Confirm in your wallet...';
     const tx = await contract.storeHash(ethers.getBytes(currentHash), label, note, tokenAddr);
     el.innerHTML='<span class="loader"></span> Broadcasting...';
     const receipt = await tx.wait();
